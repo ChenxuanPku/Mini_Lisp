@@ -18,7 +18,7 @@ enum class TokenType {
     STRING_LITERAL,
     IDENTIFIER,
 };
-
+//枚举类声明,所有的对象形式
 class Token;
 using TokenPtr = std::unique_ptr<Token>;
 
@@ -33,6 +33,7 @@ public:
     virtual ~Token() = default;
 
     static TokenPtr fromChar(char c);
+    //把字符转化为Token指针
     static TokenPtr dot();
 
     TokenType getType() const {
