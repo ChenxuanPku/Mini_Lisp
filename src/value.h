@@ -40,10 +40,10 @@ public:
   std::string toString();
 };
 class SymbolValue:public Value{
-  TokenType symbolValue;
+  std::string symbolValue;
 public:
   SymbolValue()=default;
-  SymbolValue(TokenType symbol);
+  SymbolValue(std::string symbol);
   std::string toString();
 };
  

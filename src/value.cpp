@@ -1,5 +1,4 @@
-#ifndef VALUE_CPP
-#define VALUE_CPP
+
 #include"./value.h"
 #include<iomanip>
 
@@ -11,18 +10,21 @@ std::string BooleanValue::toString()
 NumericValue:: NumericValue(double num): numericValue(num){}
 std::string NumericValue::toString()
 {
+  if(numericValue=int(numericValue)) return std::to_string((int)numericValue);
   return std::to_string(numericValue);
 }    
-StringValue:: StringValue(std::string str): stringValue(str){}
+StringValue:: StringValue(std::string str): stringValue{str}{}
 std::string StringValue::toString()
 {
-  return "\"" + stringValue + "\"";
+  std::ostringstream os;
+  os << std::quoted(stringValue);
+  return os.str();
 }    
 std::string SymbolValue::toString()
 {
-  return "";
+  return symbolValue;
 }    
-SymbolValue:: SymbolValue(TokenType symbol): symbolValue(symbol){}
+SymbolValue:: SymbolValue(std::string symbol):symbolValue(symbol){}
 std::string NilValue::toString()
 {
   return "()";
@@ -30,12 +32,18 @@ std::string NilValue::toString()
 PairValue::PairValue(ValuePtr car,ValuePtr cdr):car(car),cdr(cdr){}
 std::string PairValue::toString()
 {
-  std::string ans{};
-  if (typeid(*cdr)==typeid(PairValue))
-  {return car->toString()+" "+cdr->toString();}
-  else{
-    return car->toString()+" ."+cdr->toString();
-  }
   
+  std::ostringstream os;
+  os<<"("<<car->toString()<<" ";
+  ValuePtr pnow=cdr;
+  while(typeid(*pnow)==typeid(PairValue))
+  {
+   auto& pair = static_cast<const PairValue&>(*pnow);
+   os<<(pair.car->toString())<<" ";
+   pnow=pair.cdr;
+  }
+  if(typeid(*pnow)!=typeid(NilValue))
+  os<<". "<<pnow->toString();
+  os<<")";
+  return os.str();
 }    
-#endif
