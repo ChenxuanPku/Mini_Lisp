@@ -46,11 +46,11 @@ public:
 
 class PairValue: Value{
   
-  ValuePtr Left;
-  ValuePtr Right;
+  ValuePtr car;
+  ValuePtr cdr;
 public:
   PairValue()=default;
-  PairValue(ValuePtr left,ValuePtr right);
+  PairValue(ValuePtr car,ValuePtr cdr);
   std::string toString();         
 };
 

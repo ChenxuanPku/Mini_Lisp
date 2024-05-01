@@ -8,24 +8,30 @@ std::string BooleanValue::toString()
 NumericValue:: NumericValue(double num): numericValue(num){}
 std::string NumericValue::toString()
 {
-  return std::to_string(numericValue)
+  return std::to_string(numericValue);
 }    
 StringValue:: StringValue(std::string str): stringValue(str){}
 std::string StringValue::toString()
 {
-  return std::quoted(stringValue);
+  return "\"" + stringValue + "\"";
 }    
 std::string SymbolValue::toString()
 {
-  return symbolValue;
+  return "";
 }    
 SymbolValue:: SymbolValue(TokenType symbol): symbolValue(symbol){}
 std::string NilValue::toString()
 {
-  return "()"
+  return "()";
 }    
-PairValue::PairValue(ValuePtr left,ValuePtr right):Left(left),Right(right){}
+PairValue::PairValue(ValuePtr car,ValuePtr cdr):car(car),cdr(cdr){}
 std::string PairValue::toString()
 {
-  return
+  std::string ans{};
+  if (typeid(*cdr)==typeid(PairValue))
+  {return car->toString+" "+cdr->toString;}
+  else{
+    return car->toString+" ."+cdr->toString;
+  }
+  
 }    
