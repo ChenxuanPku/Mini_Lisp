@@ -9,7 +9,7 @@ class Value{
 public:
   virtual std::string toString();
 };
-class BooleanValue: Value{
+class BooleanValue:public Value{
 
   bool booleanValue;
 public:
@@ -18,26 +18,26 @@ public:
   std::string toString();
 };
 using ValuePtr = std::shared_ptr<Value>; 
-class NumericValue: Value{
+class NumericValue:public Value{
   double numericValue;
 public:
   NumericValue()=default;
   NumericValue(double num);
   std::string toString();
 };
-class StringValue: Value{
+class StringValue:public Value{
   std::string stringValue;
 public:
   StringValue()=default;
   StringValue(std::string str);
   std::string toString();
 };
-class NilValue: Value{
+class NilValue:public Value{
 public:
   NilValue()=default;
   std::string toString();
 };
-class SymbolValue: Value{
+class SymbolValue:public Value{
   TokenType symbolValue;
 public:
   SymbolValue()=default;
@@ -45,7 +45,7 @@ public:
   std::string toString();
 };
  
-class PairValue: Value{
+class PairValue:public Value{
   
   ValuePtr car;
   ValuePtr cdr;

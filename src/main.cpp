@@ -3,7 +3,9 @@
 
 #include "./tokenizer.h"
 #include "./value.h"
+#include "./value.cpp"
 int main() {
+
     ValuePtr a = std::make_shared<NumericValue>(42);
     ValuePtr b = std::make_shared<BooleanValue>(false);
     ValuePtr c = std::make_shared<SymbolValue>("eq?");
