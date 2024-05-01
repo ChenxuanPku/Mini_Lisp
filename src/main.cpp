@@ -7,7 +7,8 @@
 int main() {
 
     ValuePtr a = std::make_shared<NumericValue>(42);
-    ValuePtr b = std::make_shared<BooleanValue>(false);
+    std::cout << a->toString() << '\n';
+   /* ValuePtr b = std::make_shared<BooleanValue>(false);
     ValuePtr c = std::make_shared<SymbolValue>("eq?");
     ValuePtr d = std::make_shared<StringValue>("Hello\"");
     ValuePtr e = std::make_shared<NilValue>();
@@ -23,7 +24,8 @@ int main() {
               << c->toString() << '\n'
               << d->toString() << '\n'
               << e->toString() << '\n'
-              << f->toString() << std::endl;
+              << f->toString() << std::endl;*/
+              
     /*while (true) {
         try {
             std::cout << ">>> " ;

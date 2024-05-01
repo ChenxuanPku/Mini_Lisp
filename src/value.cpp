@@ -1,5 +1,8 @@
+#ifndef VALUE_CPP
+#define VALUE_CPP
 #include"./value.h"
 #include<iomanip>
+
 BooleanValue:: BooleanValue(bool boolvalue):booleanValue{boolvalue} {}
 std::string BooleanValue::toString()
 {
@@ -35,3 +38,4 @@ std::string PairValue::toString()
   }
   
 }    
+#endif

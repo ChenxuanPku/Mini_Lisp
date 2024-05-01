@@ -7,7 +7,9 @@
 
 class Value{
 public:
-  virtual std::string toString();
+  virtual std::string toString(){
+  return "";
+}
 };
 class BooleanValue:public Value{
 
