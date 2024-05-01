@@ -4,7 +4,7 @@
 #include<utility>
 #include<memory>
 #include"./token.h"
-using ValuePtr = std::shared_ptr<Value>; 
+
 class Value{
 public:
   virtual std::string toString();
@@ -17,6 +17,7 @@ public:
   BooleanValue(bool boolvalue);
   std::string toString();
 };
+using ValuePtr = std::shared_ptr<Value>; 
 class NumericValue: Value{
   double numericValue;
 public:
@@ -43,7 +44,7 @@ public:
   SymbolValue(TokenType symbol);
   std::string toString();
 };
-
+ 
 class PairValue: Value{
   
   ValuePtr car;

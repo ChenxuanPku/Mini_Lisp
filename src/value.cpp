@@ -29,9 +29,9 @@ std::string PairValue::toString()
 {
   std::string ans{};
   if (typeid(*cdr)==typeid(PairValue))
-  {return car->toString+" "+cdr->toString;}
+  {return car->toString()+" "+cdr->toString();}
   else{
-    return car->toString+" ."+cdr->toString;
+    return car->toString()+" ."+cdr->toString();
   }
   
 }    
