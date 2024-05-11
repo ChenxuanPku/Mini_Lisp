@@ -2,7 +2,8 @@
 #include"./error.h"
 ValuePtr Parser::parse()
 {
-    auto token=std::move(tokens.front());//智能指针不能复制
+    if (tokens.empty()) throw SyntaxError("Empty");
+    auto token=std::move(tokens.front());//智能指针不能复制 
     if(token->getType()==TokenType::NUMERIC_LITERAL)
     {
          auto value = static_cast<NumericLiteralToken&>(*token).getValue();
@@ -21,5 +22,34 @@ ValuePtr Parser::parse()
         return std::make_shared<StringValue>(value);
     }
     else throw SyntaxError("Unimplemented");
+}
+ValuePtr Parser::parseTails(){
+    tokens.pop_front();
+    if (tokens.empty()) throw SyntaxError("Empty");
+    if (tokens.front()->toString()=="(RIGHT_PAREN)")
+    {
+        tokens.pop_front();
+        return std::make_shared<NilValue>();
+    }
+    auto car=this->parse();
+    tokens.pop_front();
+    if (tokens.empty()) throw SyntaxError("Empty");
+    if (tokens.front()->toString()=="(DOT)")
+    {
+        tokens.pop_front();
+        auto cdr=this->parse();
+        if (tokens.empty()) throw SyntaxError("Empty");
+        if (tokens.front()->toString()=="(RIGHT_PAREN)")
+        {
+            tokens.pop_front();
+            return std::make_shared<PairValue>(car,cdr);
+        }
+        else throw SyntaxError("Not_Rightparen");
+    }
+    else{
+        auto cdr=this->parseTails();
+        return std::make_shared<PairValue>(car,cdr);
+    }
+
 }
 
