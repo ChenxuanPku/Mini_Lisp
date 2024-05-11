@@ -21,7 +21,11 @@ ValuePtr Parser::parse()
          auto value = static_cast<StringLiteralToken&>(*token).getValue();
         return std::make_shared<StringValue>(value);
     }
-    else throw SyntaxError("Unimplemented");
+    else if(token->toString()== "(LEFT_PAREN)"){
+        return this->parseTails();
+    }
+    else
+     throw SyntaxError("Unimplemented");
 }
 ValuePtr Parser::parseTails(){
     tokens.pop_front();
