@@ -6,7 +6,7 @@
 #include"./parser.h"
 int main() {
 
-    /*while (true) {
+    while (true) {
         try {
             std::cout << ">>> " ;
             std::string line;
@@ -15,11 +15,14 @@ int main() {
                 std::exit(0);
             }
             auto tokens = Tokenizer::tokenize(line);
+            Parser parser(std::move(tokens)); // TokenPtr 不支持复制
+            auto value = parser.parse();
+            std::cout << value->toString() << std::endl;
             for (auto& token : tokens) {
                 std::cout << *token << std::endl;
             }
         } catch (std::runtime_error& e) {
             std::cerr << "Error: " << e.what() << std::endl;
         }
-    }*/
+    }
 }
