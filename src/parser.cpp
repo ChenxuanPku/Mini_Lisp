@@ -21,7 +21,7 @@ ValuePtr Parser::parse()
          auto value = static_cast<StringLiteralToken&>(*token).getValue();
         return std::make_shared<StringValue>(value);
     }
-    else if(token->toString()== "(LEFT_PAREN)"){
+    else if(token->getType()==TokenType::LEFT_PAREN){
         return this->parseTails();
     }
     else
