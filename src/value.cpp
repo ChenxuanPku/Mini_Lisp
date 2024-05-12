@@ -10,8 +10,16 @@ std::string BooleanValue::toString()
 NumericValue:: NumericValue(double num): numericValue(num){}
 std::string NumericValue::toString()
 {
-  if(numericValue=int(numericValue)) return std::to_string((int)numericValue);
-  return std::to_string(numericValue);
+  std::string str=std::to_string(numericValue);
+  size_t pos = str.find_last_not_of('0');
+  if (pos != std::string::npos) {
+        str = str.substr(0, pos + 1);
+  }
+  if (!str.empty() && str.back() == '.') {
+        str.pop_back();
+  }
+  return str;
+  
 }    
 StringValue:: StringValue(std::string str): stringValue{str}{}
 std::string StringValue::toString()

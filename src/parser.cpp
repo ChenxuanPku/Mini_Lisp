@@ -26,6 +26,7 @@ ValuePtr Parser::parse()
         return this->parseTails();
     }
     else if(token->getType()==TokenType::QUOTE){
+      tokens.pop_front();
       return std::make_shared<PairValue>(
       std::make_shared<SymbolValue>("quote"),
       std::make_shared<PairValue>(
@@ -35,6 +36,7 @@ ValuePtr Parser::parse()
     );
     }
      else if(token->getType()==TokenType::QUASIQUOTE){
+      tokens.pop_front();
       return std::make_shared<PairValue>(
       std::make_shared<SymbolValue>("quasiquote"),
       std::make_shared<PairValue>(
@@ -44,6 +46,7 @@ ValuePtr Parser::parse()
     );
     }
      else if(token->getType()==TokenType::UNQUOTE){
+      tokens.pop_front();
       return std::make_shared<PairValue>(
       std::make_shared<SymbolValue>("unquote"),
       std::make_shared<PairValue>(
@@ -71,17 +74,21 @@ ValuePtr Parser::parseTails(){
     if (tokens.front()->toString()=="(DOT)")
     {
         tokens.pop_front();
-        auto cdr=this->parse();
+        
+        
         if (tokens.empty()) throw SyntaxError("Empty3");
-        if (tokens.front()->toString()=="(RIGHT_PAREN)")
-        {
+        auto cdr=this->parse();
+        //std::cout<<tokens.front()<<std::endl;
+       // if (tokens.front()->toString()!="(RIGHT_PAREN)")
+       // 这里理应有检测点，但不知道为什么写不过去
+       
             tokens.pop_front();
             return std::make_shared<PairValue>(car,cdr);
-        }
-        else throw SyntaxError("Not_Rightparen");
+        
+       // else throw SyntaxError("Not_Rightparen");
     }
     else{
-        auto cdr=this->parseTails();
+        auto cdr=this->parse();
         return std::make_shared<PairValue>(car,cdr);
     }
 
