@@ -57,7 +57,7 @@ ValuePtr Parser::parse()
 
 ValuePtr Parser::parseTails(){
     tokens.pop_front();
-    if (tokens.empty()) throw SyntaxError("Empty");
+    if (tokens.empty()) throw SyntaxError("Empty1");
     if (tokens.front()->toString()=="(RIGHT_PAREN)")
     {
         tokens.pop_front();
@@ -65,12 +65,12 @@ ValuePtr Parser::parseTails(){
     }
     auto car=this->parse();
     tokens.pop_front();
-    if (tokens.empty()) throw SyntaxError("Empty");
+    if (tokens.empty()) throw SyntaxError("Empty2");
     if (tokens.front()->toString()=="(DOT)")
     {
         tokens.pop_front();
         auto cdr=this->parse();
-        if (tokens.empty()) throw SyntaxError("Empty");
+        if (tokens.empty()) throw SyntaxError("Empty3");
         if (tokens.front()->toString()=="(RIGHT_PAREN)")
         {
             tokens.pop_front();
