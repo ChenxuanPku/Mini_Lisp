@@ -1,5 +1,6 @@
 #include"./parser.h"
 #include"./error.h"
+#include<iostream>
 ValuePtr Parser::parse()
 {
     if (tokens.empty()) throw SyntaxError("Empty");
@@ -52,7 +53,8 @@ ValuePtr Parser::parse()
     );
     }
     else
-     throw SyntaxError("Unimplemented");
+    {   std::cout << *token << std::endl;
+        throw SyntaxError("Unimplemented");}
 }
 
 ValuePtr Parser::parseTails(){
