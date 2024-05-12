@@ -24,6 +24,33 @@ ValuePtr Parser::parse()
     else if(token->getType()==TokenType::LEFT_PAREN){
         return this->parseTails();
     }
+    else if(token->getType()==TokenType::QUOTE){
+      return std::make_shared<PairValue>(
+      std::make_shared<SymbolValue>("quote"),
+      std::make_shared<PairValue>(
+          this->parse(),
+          std::make_shared<NilValue>()
+      )
+    );
+    }
+     else if(token->getType()==TokenType::QUASIQUOTE){
+      return std::make_shared<PairValue>(
+      std::make_shared<SymbolValue>("quasiquote"),
+      std::make_shared<PairValue>(
+          this->parse(),
+          std::make_shared<NilValue>()
+      )
+    );
+    }
+     else if(token->getType()==TokenType::UNQUOTE){
+      return std::make_shared<PairValue>(
+      std::make_shared<SymbolValue>("unquote"),
+      std::make_shared<PairValue>(
+          this->parse(),
+          std::make_shared<NilValue>()
+      )
+    );
+    }
     else
      throw SyntaxError("Unimplemented");
 }
