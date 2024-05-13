@@ -9,17 +9,23 @@ class Value{
 public:
   virtual std::string toString(){
   return "";
-}
+  
+} bool isBoolean();
+  bool isNumeric();
+  bool isString();
+  bool isNil();
+  bool isSymbol();
+  bool isPair();
 };
+using ValuePtr = std::shared_ptr<Value>; 
 class BooleanValue:public Value{
-
   bool booleanValue;
 public:
   BooleanValue()=default;
   BooleanValue(bool boolvalue);
   std::string toString();
 };
-using ValuePtr = std::shared_ptr<Value>; 
+
 class NumericValue:public Value{
   double numericValue;
 public:

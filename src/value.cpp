@@ -55,3 +55,11 @@ std::string PairValue::toString()
   os<<")";
   return os.str();
 }    
+bool Value::isBoolean(){
+  return (typeid(*this)==typeid(BooleanValue));
+}
+bool Value::isNumeric(){return (typeid(*this)==typeid(NumericValue));}
+bool Value::isString(){return (typeid(*this)==typeid(StringValue));}
+bool Value::isNil(){return (typeid(*this)==typeid(NilValue));}
+bool Value::isSymbol(){return (typeid(*this)==typeid(SymbolValue));}
+bool Value::isPair(){return (typeid(*this)==typeid(PairValue));}
