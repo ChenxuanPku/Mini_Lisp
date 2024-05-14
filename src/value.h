@@ -3,6 +3,7 @@
 #include<string>
 #include<utility>
 #include<memory>
+#include<vector>
 #include"./token.h"
 
 class Value{
@@ -16,6 +17,8 @@ public:
   bool isNil();
   bool isSymbol();
   bool isPair();
+  virtual std::vector<std::shared_ptr<Value>> toVector();
+  virtual std::optional<std::string> asSymbol();
 };
 using ValuePtr = std::shared_ptr<Value>; 
 class BooleanValue:public Value{
@@ -51,16 +54,18 @@ public:
   SymbolValue()=default;
   SymbolValue(std::string symbol);
   std::string toString();
+  std::optional<std::string> asSymbol();
 };
  
 class PairValue:public Value{
-  
+protected:
   ValuePtr car;
   ValuePtr cdr;
 public:
   PairValue()=default;
   PairValue(ValuePtr car,ValuePtr cdr);
-  std::string toString();         
+  std::string toString();
+  std::vector<ValuePtr> toVector();        
 };
 
 #endif

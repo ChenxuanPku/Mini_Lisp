@@ -1,7 +1,8 @@
 
 #include"./value.h"
+#include"./error.h"
 #include<iomanip>
-
+#include<iostream>
 BooleanValue:: BooleanValue(bool boolvalue):booleanValue{boolvalue} {}
 std::string BooleanValue::toString()
 {
@@ -63,3 +64,30 @@ bool Value::isString(){return (typeid(*this)==typeid(StringValue));}
 bool Value::isNil(){return (typeid(*this)==typeid(NilValue));}
 bool Value::isSymbol(){return (typeid(*this)==typeid(SymbolValue));}
 bool Value::isPair(){return (typeid(*this)==typeid(PairValue));}
+std::vector<ValuePtr> Value::toVector(){
+  
+  throw LispError("notList");
+}
+std::vector<ValuePtr> PairValue::toVector(){
+  std::vector<ValuePtr> Vec{};
+  if (typeid(*car)==typeid(PairValue))
+  {
+    for (ValuePtr vPtr:car->toVector())
+    Vec.push_back(std::move(vPtr));
+  }
+  else Vec.push_back(std::move(car));
+  if (typeid(*cdr)==typeid(PairValue))
+  {
+    for (ValuePtr vPtr:cdr->toVector())
+    Vec.push_back(std::move(vPtr));
+  }
+  else Vec.push_back(std::move(cdr));
+  
+  return Vec;
+}
+std::optional<std::string> Value::asSymbol(){
+  return std::nullopt;
+}
+std::optional<std::string> SymbolValue::asSymbol(){
+  return symbolValue;
+}
