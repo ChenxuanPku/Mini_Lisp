@@ -106,4 +106,13 @@ double NumericValue::asNumber()
 {
   return numericValue;
 }
+ValuePtr Value::toBack(){
+  throw LispError("incorrect pair");
+}
 
+ValuePtr PairValue::toBack(){
+  return std::move(cdr);
+}
+BuiltinFuncType* BuiltinProcValue::asFunc(){
+  return func;
+}
