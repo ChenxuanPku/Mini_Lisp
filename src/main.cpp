@@ -5,6 +5,7 @@
 #include "./value.h"
 #include "./parser.h"
 #include "./eval_env.cpp"
+#include "./builtins.h"
 #include "rjsj_test.hpp"
 
 struct TestCtx {

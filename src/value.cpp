@@ -91,3 +91,20 @@ std::optional<std::string> Value::asSymbol(){
 std::optional<std::string> SymbolValue::asSymbol(){
   return symbolValue;
 }
+BuiltinProcValue::BuiltinProcValue(BuiltinFuncType* func):func(func){}
+
+double NumericValue::asNumber()
+{
+  return numericValue;
+}
+
+ValuePtr add(const std::vector<ValuePtr>& params){
+  double result=0;
+  for (const auto& i:params)
+  {
+    if(!i->isNumeric())
+      throw LispError("Cannot add a non-numeric value.");
+    result+=i->asNumber();
+    return std::make_shared<NumericValue>(result);
+  }
+}

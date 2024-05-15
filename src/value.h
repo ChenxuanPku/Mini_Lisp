@@ -19,6 +19,7 @@ public:
   bool isPair();
   virtual std::vector<std::shared_ptr<Value>> toVector();
   virtual std::optional<std::string> asSymbol();
+  virtual double asNumber();
 };
 using ValuePtr = std::shared_ptr<Value>; 
 class BooleanValue:public Value{
@@ -35,6 +36,7 @@ public:
   NumericValue()=default;
   NumericValue(double num);
   std::string toString();
+  double asNumber();
 };
 class StringValue:public Value{
   std::string stringValue;
@@ -68,4 +70,14 @@ public:
   std::vector<ValuePtr> toVector();        
 };
 
+using BuiltinFuncType = ValuePtr(const std::vector<ValuePtr>&);
+class BuiltinProcValue : public Value{
+  BuiltinFuncType* func{nullptr};
+public:
+  BuiltinProcValue()=default;
+  BuiltinProcValue(BuiltinFuncType* func);
+  std::string toString() ;
+};
+
+ValuePtr add(const std::vector<ValuePtr>& params);
 #endif
