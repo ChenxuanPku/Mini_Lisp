@@ -70,7 +70,6 @@ std::vector<ValuePtr> Value::toVector(){
   throw LispError("notList");
 }
 std::vector<ValuePtr> PairValue::toVector(){
-  //std::cout<<this->toString()<<std::endl;
   std::vector<ValuePtr> Vec{};
   if (typeid(*car)==typeid(PairValue))
   {

@@ -28,7 +28,7 @@ ValuePtr EvalEnv::eval(ValuePtr expr){
      // throw LispError("Malformed define.");
      
      ValuePtr proc=this->eval(v[0]);
-     std::cout<<expr->toString()<<std::endl;
+     
      std::vector<ValuePtr> args=evalList(expr->toBack());
      this->apply(proc, args);
 
@@ -57,6 +57,7 @@ std::vector<ValuePtr> EvalEnv::evalList(ValuePtr expr) {
     std::ranges::transform(expr->toVector(),
                            std::back_inserter(result),
                            [this](ValuePtr v) { return this->eval(v); });
+    std::cout<<"111"<<std::endl;
     return result;
 }
 
