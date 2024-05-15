@@ -2,6 +2,8 @@
 #include "./error.h"
 #include "./builtins.h"
 #include<iostream>
+#include <algorithm>
+#include <iterator>
 EvalEnv::EvalEnv(){
   SymbolMap["+"]=std::make_shared<BuiltinProcValue>(&add);
 }
@@ -23,6 +25,11 @@ ValuePtr EvalEnv::eval(ValuePtr expr){
       }else {
       throw LispError("Malformed define.");
   }
+  }else{
+     ValuePtr proc=this->eval(v[0]);
+     
+     std::vector<ValuePtr> args=evalList(expr->toBack());
+     return this->apply(proc, args);
   }}
   if(expr->isSymbol()){
   if (auto name=expr->asSymbol())
@@ -38,6 +45,25 @@ ValuePtr EvalEnv::eval(ValuePtr expr){
   {
     return std::move(expr);
   }
-  throw LispError("Unimplemented");
+  throw LispError("11Unimplemented");
 }
 
+std::vector<ValuePtr> EvalEnv::evalList(ValuePtr expr) {
+    
+    std::vector<ValuePtr> result;
+    std::ranges::transform(expr->toVector(),
+                           std::back_inserter(result),
+                           [this](ValuePtr v) { return this->eval(v); });
+    std::cout<<"111"<<std::endl;
+    return result;
+}
+
+ValuePtr EvalEnv::apply(ValuePtr proc, std::vector<ValuePtr> args)
+{
+   if (typeid(*proc) == typeid(BuiltinProcValue)){
+    return(dynamic_cast<BuiltinProcValue*>(proc.get()))->asfunc()(args);
+    
+   }else{
+    throw LispError("Unimplemented");
+   }
+}

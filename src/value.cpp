@@ -107,3 +107,13 @@ double NumericValue::asNumber()
   return numericValue;
 }
 
+BuiltinFuncType* BuiltinProcValue::asfunc()
+{
+  return func;
+}
+ValuePtr Value::toBack(){
+  return std::make_shared<NilValue>();
+}
+ValuePtr PairValue::toBack(){
+  return std::move(cdr);
+}
