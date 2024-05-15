@@ -22,6 +22,7 @@ public:
   virtual std::optional<std::string> asSymbol();
   virtual double asNumber();
   virtual std::shared_ptr<Value> toBack();
+  
 };
 using ValuePtr = std::shared_ptr<Value>; 
 class BooleanValue:public Value{
