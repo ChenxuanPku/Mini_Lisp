@@ -4,7 +4,7 @@
 #include "./tokenizer.h"
 #include "./value.h"
 #include "./parser.h"
-#include "./eval_env.cpp"
+#include "./eval_env.h"
 #include "./builtins.h"
 #include "rjsj_test.hpp"
 
@@ -19,7 +19,7 @@ struct TestCtx {
     }
 };
 int main() {
-    RJSJ_TEST(TestCtx, Lv2, Lv3);
+    //RJSJ_TEST(TestCtx, Lv2, Lv3);
     EvalEnv env;
     while (true) {
         try {

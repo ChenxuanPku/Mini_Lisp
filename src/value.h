@@ -17,6 +17,7 @@ public:
   bool isNil();
   bool isSymbol();
   bool isPair();
+  bool isBuiltin();
   virtual std::vector<std::shared_ptr<Value>> toVector();
   virtual std::optional<std::string> asSymbol();
   virtual double asNumber();
@@ -79,5 +80,5 @@ public:
   std::string toString() ;
 };
 
-ValuePtr add(const std::vector<ValuePtr>& params);
+
 #endif

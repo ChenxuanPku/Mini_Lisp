@@ -1,9 +1,14 @@
 #include "./eval_env.h"
 #include "./error.h"
+#include "./builtins.h"
 #include<iostream>
+EvalEnv::EvalEnv(){
+  SymbolMap["+"]=std::make_shared<BuiltinProcValue>(&add);
+}
+
 ValuePtr EvalEnv::eval(ValuePtr expr){
   if(expr->isBoolean()||expr->isNumeric()||expr->isString())
-    return expr;
+    return std::move(expr);
   if(expr->isNil())
     throw LispError("Evaluating nil is prohibited.");
   if(expr->isPair())
@@ -29,6 +34,10 @@ ValuePtr EvalEnv::eval(ValuePtr expr){
         throw LispError("Variable " + *name + " not defined.");
     }
   }}
+  if(expr->isBuiltin())
+  {
+    return std::move(expr);
+  }
   throw LispError("Unimplemented");
 }
 

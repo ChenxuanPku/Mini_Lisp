@@ -64,6 +64,7 @@ bool Value::isString(){return (typeid(*this)==typeid(StringValue));}
 bool Value::isNil(){return (typeid(*this)==typeid(NilValue));}
 bool Value::isSymbol(){return (typeid(*this)==typeid(SymbolValue));}
 bool Value::isPair(){return (typeid(*this)==typeid(PairValue));}
+bool Value::isBuiltin(){return (typeid(*this)==typeid(BuiltinProcValue));}
 std::vector<ValuePtr> Value::toVector(){
   
   throw LispError("notList");
@@ -93,18 +94,16 @@ std::optional<std::string> SymbolValue::asSymbol(){
 }
 BuiltinProcValue::BuiltinProcValue(BuiltinFuncType* func):func(func){}
 
+std::string BuiltinProcValue::toString()
+{
+  return "#<procedure>";
+}
+double Value::asNumber()
+{
+  return 0;
+}
 double NumericValue::asNumber()
 {
   return numericValue;
 }
 
-ValuePtr add(const std::vector<ValuePtr>& params){
-  double result=0;
-  for (const auto& i:params)
-  {
-    if(!i->isNumeric())
-      throw LispError("Cannot add a non-numeric value.");
-    result+=i->asNumber();
-    return std::make_shared<NumericValue>(result);
-  }
-}
