@@ -73,7 +73,7 @@ std::vector<ValuePtr> PairValue::toVector(){
   std::vector<ValuePtr> Vec{};
   std::cout<<"tovector"<<std::endl;
   if (typeid(*car)==typeid(PairValue))
-  { std::cout<<"car"<<std::endl;
+  { 
     for (ValuePtr vPtr:car->toVector())
     Vec.push_back(std::move(vPtr));
   }
