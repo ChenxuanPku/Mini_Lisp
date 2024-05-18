@@ -44,7 +44,7 @@ std::string PairValue::toString()
 {
   
   std::ostringstream os;
-  os<<"Pair:"<<"("<<car->toString()<<" ";
+  os<<"("<<car->toString()<<" ";
   ValuePtr pnow=cdr;
   while(typeid(*pnow)==typeid(PairValue))
   {

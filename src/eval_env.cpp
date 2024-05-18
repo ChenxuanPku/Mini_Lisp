@@ -29,7 +29,6 @@ ValuePtr EvalEnv::eval(ValuePtr expr){
   }else{
      ValuePtr proc=this->eval(v[0]);
      std::vector<ValuePtr> args=evalList(expr->toBack());
-     
      return this->apply(proc, args);
   }}
   if(expr->isSymbol()){
@@ -66,7 +65,7 @@ ValuePtr EvalEnv::apply(ValuePtr proc, std::vector<ValuePtr> args)
     return(dynamic_cast<BuiltinProcValue*>(proc.get()))->asfunc()(args);
     
    }else{
-    throw LispError("Unimplemented");
+    throw LispError("111Unimplemented");
    }
 }/*
 std::vector<ValuePtr> ToVector(ValuePtr expr){
