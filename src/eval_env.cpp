@@ -33,6 +33,7 @@ ValuePtr EvalEnv::eval(ValuePtr expr){
       if (expr->toHead()->asSymbol() == "define"s) 
       {
         std::cout<<expr->toHead()->toString()<<std::endl;
+        std::cout<<expr->toBack()->toString()<<std::endl;
         std::vector<ValuePtr> v = (expr->toBack())->toVector();
         for (ValuePtr vp:v)std::cout<<vp->toString()<<" ";
         if (auto name = v[0]->asSymbol()){
@@ -40,7 +41,7 @@ ValuePtr EvalEnv::eval(ValuePtr expr){
           else SymbolMap[*name]=eval(v[1]);
           return std::make_shared<NilValue>();
          }
-      else throw LispError("Malformed define.");
+      else throw LispError(v[0]->toString()+"Malformed define.");
      } else{
    
     ValuePtr proc=this->eval(expr->toHead());
