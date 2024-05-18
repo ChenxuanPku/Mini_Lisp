@@ -1,6 +1,7 @@
 
 #include"./value.h"
 #include"./error.h"
+#include"./eval_env.h"
 #include<iomanip>
 #include<iostream>
 BooleanValue:: BooleanValue(bool boolvalue):booleanValue{boolvalue} {}
@@ -43,7 +44,7 @@ std::string PairValue::toString()
 {
   
   std::ostringstream os;
-  os<<"("<<car->toString()<<" ";
+  os<<"Pair:"<<"("<<car->toString()<<" ";
   ValuePtr pnow=cdr;
   while(typeid(*pnow)==typeid(PairValue))
   {
@@ -71,22 +72,10 @@ std::vector<ValuePtr> Value::toVector(){
 }
 std::vector<ValuePtr> PairValue::toVector(){
   std::vector<ValuePtr> Vec{};
- // std::cout<<"tovector"<<std::endl;
   if(car!=nullptr){
-  if (typeid(*car)==typeid(PairValue))
-  { 
-    for (ValuePtr vPtr:car->toVector())
-    Vec.push_back(vPtr);
-  }
-  else if(typeid(*car)!=typeid(NilValue))Vec.push_back(car);}
+  if(typeid(*car)!=typeid(NilValue))Vec.push_back(car);}
   if(cdr!=nullptr){
-  if (typeid(*cdr)==typeid(PairValue))
-  {
-    for (ValuePtr vPtr:cdr->toVector())
-    Vec.push_back(vPtr);
-  }
-  else if(typeid(*cdr)!=typeid(NilValue))Vec.push_back(cdr);
-  
+  if(typeid(*cdr)!=typeid(NilValue))Vec.push_back(cdr);
   }
   return Vec;
 }
@@ -118,7 +107,14 @@ BuiltinFuncType* BuiltinProcValue::asfunc()
 ValuePtr Value::toBack(){
   return std::make_shared<NilValue>();
 }
+ValuePtr Value::toHead(){
+  return std::make_shared<NilValue>();
+}
+ValuePtr PairValue::toHead(){
+  return car;
+}
+
 ValuePtr PairValue::toBack(){
-  return std::move(cdr);
+  return cdr;
 }
 

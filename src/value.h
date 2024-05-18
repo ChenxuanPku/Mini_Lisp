@@ -6,6 +6,7 @@
 #include<vector>
 #include"./token.h"
 
+
 class Value{
 public:
   virtual std::string toString(){
@@ -21,6 +22,7 @@ public:
   virtual std::vector<std::shared_ptr<Value>> toVector();
   virtual std::optional<std::string> asSymbol();
   virtual double asNumber();
+  virtual std::shared_ptr<Value> toHead();
   virtual std::shared_ptr<Value> toBack();
   
 };
@@ -71,7 +73,9 @@ public:
   PairValue(ValuePtr car,ValuePtr cdr);
   std::string toString();
   std::vector<ValuePtr> toVector();     
+  ValuePtr toHead();   
   ValuePtr toBack();   
+ 
 };
 
 using BuiltinFuncType = ValuePtr(const std::vector<ValuePtr>&);

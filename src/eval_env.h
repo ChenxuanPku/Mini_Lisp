@@ -9,6 +9,7 @@ private:
     std::unordered_map<std::string,ValuePtr> SymbolMap;
     std::vector<ValuePtr> evalList(ValuePtr expr);
     ValuePtr apply(ValuePtr proc, std::vector<ValuePtr> args);
+   // std::vector<ValuePtr> ToVector(ValuePtr expr);
 public:
     EvalEnv();
     ValuePtr eval(ValuePtr expr);

@@ -68,4 +68,29 @@ ValuePtr EvalEnv::apply(ValuePtr proc, std::vector<ValuePtr> args)
    }else{
     throw LispError("Unimplemented");
    }
-}
+}/*
+std::vector<ValuePtr> ToVector(ValuePtr expr){
+  if (expr==nullptr)
+    throw LispError("Empty");
+  if (typeid(*expr)!=typeid(PairValue))
+    throw LispError("NotList");
+
+  ValuePtr newCar{expr->toHead()},newCdr{expr->toBack()};
+  std::vector<ValuePtr> Vec{};
+  if(newCar!=nullptr){
+  if (typeid(*newCar)==typeid(PairValue))
+  { 
+   
+    //Vec.push_back(env.eval(car));
+  }
+  else if(typeid(*newCar)!=typeid(NilValue))Vec.push_back(newCar);}
+  if(newCdr!=nullptr){
+  if (typeid(*newCdr)==typeid(PairValue))
+  {
+    //Vec.push_back(env.eval(cdr));
+  }
+  else if(typeid(newCdr)!=typeid(NilValue))Vec.push_back(newCdr);
+  
+  }
+  return Vec;
+}*/
