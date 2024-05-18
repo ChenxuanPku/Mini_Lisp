@@ -71,20 +71,23 @@ std::vector<ValuePtr> Value::toVector(){
 }
 std::vector<ValuePtr> PairValue::toVector(){
   std::vector<ValuePtr> Vec{};
-  std::cout<<"tovector"<<std::endl;
+ // std::cout<<"tovector"<<std::endl;
+  if(car!=nullptr){
   if (typeid(*car)==typeid(PairValue))
   { 
     for (ValuePtr vPtr:car->toVector())
-    Vec.push_back(std::move(vPtr));
+    Vec.push_back(vPtr);
   }
-  else Vec.push_back(std::move(car));
+  else if(typeid(*car)!=typeid(NilValue))Vec.push_back(car);}
+  if(cdr!=nullptr){
   if (typeid(*cdr)==typeid(PairValue))
   {
     for (ValuePtr vPtr:cdr->toVector())
-    Vec.push_back(std::move(vPtr));
+    Vec.push_back(vPtr);
   }
-  else Vec.push_back(std::move(cdr));
+  else if(typeid(*cdr)!=typeid(NilValue))Vec.push_back(cdr);
   
+  }
   return Vec;
 }
 std::optional<std::string> Value::asSymbol(){

@@ -17,6 +17,7 @@ ValuePtr EvalEnv::eval(ValuePtr expr){
   {
     using namespace std::literals; // 使用 s 后缀
     std::vector<ValuePtr> v = expr->toVector();
+   
     if (v[0]->asSymbol() == "define"s) {
       if (auto name = v[1]->asSymbol()){
         if(auto newname=v[2]->asSymbol()) SymbolMap[*name]=SymbolMap[*newname];
@@ -27,8 +28,8 @@ ValuePtr EvalEnv::eval(ValuePtr expr){
   }
   }else{
      ValuePtr proc=this->eval(v[0]);
-     
      std::vector<ValuePtr> args=evalList(expr->toBack());
+     
      return this->apply(proc, args);
   }}
   if(expr->isSymbol()){
@@ -51,11 +52,11 @@ ValuePtr EvalEnv::eval(ValuePtr expr){
 std::vector<ValuePtr> EvalEnv::evalList(ValuePtr expr) {
     
     std::vector<ValuePtr> result;
-    std::cout<<"test"<<std::endl;
+    
     std::ranges::transform(expr->toVector(),
                            std::back_inserter(result),
-                           [this](ValuePtr v) {std::cout<<v->toString()<<std::endl; return this->eval(v); });
-    std::cout<<"111"<<std::endl;
+                           [this](ValuePtr v) { return this->eval(v); });
+   
     return result;
 }
 
