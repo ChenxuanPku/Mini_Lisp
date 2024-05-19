@@ -75,19 +75,19 @@ std::vector<ValuePtr> PairValue::toVector(){
  // std::cout<<"tovec"<<toString()<<std::endl;
   std::vector<ValuePtr> Vec{};
   if(typeid(*this)==typeid(NilValue))return Vec;
-  if(car->isSymbol()){
+ /* if(car->isSymbol()){
     Vec.push_back(std::make_shared<PairValue>(car,cdr));
    // std::cout<<"111"<<std::endl;
     return Vec;
-  }
+  }*/
   if(car!=nullptr)
-     if(typeid(*car)!=typeid(NilValue)){
-      if (typeid(*car)!=typeid(PairValue)) Vec.push_back(car);
-      else{
+     if(typeid(*car)!=typeid(NilValue)){Vec.push_back(car);
+     /* if (typeid(*car)!=typeid(PairValue)) Vec.push_back(car);
+    else{
       for(auto i:car->toVector())
         if(typeid(*i)!=typeid(NilValue))
           Vec.push_back(i);}
-          }
+          */} 
  if(cdr!=nullptr)
      if(typeid(*cdr)!=typeid(NilValue)){
       if (typeid(*cdr)!=typeid(PairValue)) Vec.push_back(cdr);

@@ -6,7 +6,9 @@
 #include <iterator>
 EvalEnv::EvalEnv(){
   SymbolMap["+"]=std::make_shared<BuiltinProcValue>(&add);
+  SymbolMap["print"]=std::make_shared<BuiltinProcValue>(&print);
 }
+
 
 ValuePtr EvalEnv::eval(ValuePtr expr){
   if(expr->isSymbol()){ 
@@ -32,10 +34,10 @@ ValuePtr EvalEnv::eval(ValuePtr expr){
     {
       if (expr->toHead()->asSymbol() == "define"s) 
       {
-        std::cout<<expr->toHead()->toString()<<std::endl;
-        std::cout<<expr->toBack()->toString()<<std::endl;
+       // std::cout<<expr->toHead()->toString()<<std::endl;
+       // std::cout<<expr->toBack()->toString()<<std::endl;
         std::vector<ValuePtr> v = (expr->toBack())->toVector();
-        for (ValuePtr vp:v)std::cout<<vp->toString()<<" ";
+        //for (ValuePtr vp:v)std::cout<<vp->toString()<<" ";
         if (auto name = v[0]->asSymbol()){
           if(auto newname=v[1]->asSymbol()) SymbolMap[*name]=SymbolMap[*newname];
           else SymbolMap[*name]=eval(v[1]);
@@ -45,7 +47,7 @@ ValuePtr EvalEnv::eval(ValuePtr expr){
      } else{
    
     ValuePtr proc=this->eval(expr->toHead());
-    std::cout<<expr->toBack()->toString()<<std::endl;
+    //std::cout<<expr->toBack()->toString()<<std::endl;
      std::vector<ValuePtr> args=evalList(expr->toBack());
      //for (auto i:args)std::cout<<"apply"<<i->toString()<<std::endl;
      return this->apply(proc, args);
