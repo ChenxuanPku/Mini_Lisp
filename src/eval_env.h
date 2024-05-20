@@ -13,7 +13,10 @@ private:
 public:
     EvalEnv();
     ValuePtr eval(ValuePtr expr);
+    void Push_Back(std::string str,ValuePtr valueptr );
     
 };
-
+using SpecialFormType = ValuePtr(const std::vector<ValuePtr>&, EvalEnv&);
+ValuePtr defineForm(const std::vector<ValuePtr>& args, EvalEnv& env) ;
+ValuePtr quoteForm(const std::vector<ValuePtr>& args, EvalEnv& env) ;
 #endif

@@ -1,6 +1,7 @@
 #include "./eval_env.h"
 #include "./error.h"
 #include "./builtins.h"
+#include "./forms.h"
 #include<iostream>
 #include <algorithm>
 #include <iterator>
@@ -9,7 +10,9 @@ EvalEnv::EvalEnv(){
   SymbolMap["print"]=std::make_shared<BuiltinProcValue>(&print);
 }
 
-
+void EvalEnv::Push_Back(std::string str,ValuePtr valueptr){
+  SymbolMap[str]=std::make_shared<Value>(valueptr);
+}
 ValuePtr EvalEnv::eval(ValuePtr expr){
   if(expr->isSymbol()){ 
   if (auto name=expr->asSymbol())
@@ -32,10 +35,17 @@ ValuePtr EvalEnv::eval(ValuePtr expr){
     
     if(expr->toHead()->isSymbol())
     {
+      if(auto name=expr->toHead()->asSymbol())
+      {    auto it=SPECIAL_FORMS.find(*name);
+           if(it!=SPECIAL_FORMS.end())
+           {
+              (it->second)(expr->toBack()->toVector(), *this);
+            //(SPECIAL_FORMS[*name].second)(expr->toBack()->toVector(), *this);
+           }
+/*
       if (expr->toHead()->asSymbol() == "define"s) 
       {
-       // std::cout<<expr->toHead()->toString()<<std::endl;
-       // std::cout<<expr->toBack()->toString()<<std::endl;
+       
         std::vector<ValuePtr> v = (expr->toBack())->toVector();
         //for (ValuePtr vp:v)std::cout<<vp->toString()<<" ";
         if (auto name = v[0]->asSymbol()){
@@ -44,7 +54,7 @@ ValuePtr EvalEnv::eval(ValuePtr expr){
           return std::make_shared<NilValue>();
          }
       else throw LispError(v[0]->toString()+"Malformed define.");
-     } else{
+     }*/ }else{
    
     ValuePtr proc=this->eval(expr->toHead());
     //std::cout<<expr->toBack()->toString()<<std::endl;
@@ -81,29 +91,19 @@ ValuePtr EvalEnv::apply(ValuePtr proc, std::vector<ValuePtr> args)
    }else{
     throw LispError(proc->toString()+"Unimplemented");
    }
-}/*
-std::vector<ValuePtr> ToVector(ValuePtr expr){
-  if (expr==nullptr)
-    throw LispError("Empty");
-  if (typeid(*expr)!=typeid(PairValue))
-    throw LispError("NotList");
+}
 
-  ValuePtr newCar{expr->toHead()},newCdr{expr->toBack()};
-  std::vector<ValuePtr> Vec{};
-  if(newCar!=nullptr){
-  if (typeid(*newCar)==typeid(PairValue))
-  { 
-   
-    //Vec.push_back(env.eval(car));
-  }
-  else if(typeid(*newCar)!=typeid(NilValue))Vec.push_back(newCar);}
-  if(newCdr!=nullptr){
-  if (typeid(*newCdr)==typeid(PairValue))
-  {
-    //Vec.push_back(env.eval(cdr));
-  }
-  else if(typeid(newCdr)!=typeid(NilValue))Vec.push_back(newCdr);
-  
-  }
-  return Vec;
-}*/
+ValuePtr defineForm(const std::vector<ValuePtr>& args, EvalEnv& env) 
+{
+    if (auto name = args[0]->asSymbol()) {
+        env.Push_Back(*name, args[1]);
+    } else {
+        throw LispError("Unimplemented");
+    }
+     return std::make_shared<NilValue>();
+}
+
+ValuePtr quoteForm(const std::vector<ValuePtr>& args, EvalEnv& env) 
+{
+  return args[1];
+}
