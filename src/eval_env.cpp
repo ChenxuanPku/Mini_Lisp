@@ -11,7 +11,7 @@ EvalEnv::EvalEnv(){
 }
 
 void EvalEnv::Push_Back(std::string str,ValuePtr valueptr){
-  SymbolMap[str]=std::make_shared<Value>(valueptr);
+  SymbolMap[str]=valueptr;
 }
 ValuePtr EvalEnv::eval(ValuePtr expr){
   if(expr->isSymbol()){ 
@@ -38,8 +38,8 @@ ValuePtr EvalEnv::eval(ValuePtr expr){
       if(auto name=expr->toHead()->asSymbol())
       {    auto it=SPECIAL_FORMS.find(*name);
            if(it!=SPECIAL_FORMS.end())
-           {
-              (it->second)(expr->toBack()->toVector(), *this);
+           { //std::cout<<*name<<std::endl;
+             return (it->second)(expr->toBack()->toVector(), *this);
             //(SPECIAL_FORMS[*name].second)(expr->toBack()->toVector(), *this);
            }
 /*
@@ -54,23 +54,23 @@ ValuePtr EvalEnv::eval(ValuePtr expr){
           return std::make_shared<NilValue>();
          }
       else throw LispError(v[0]->toString()+"Malformed define.");
-     }*/ }else{
+     }*/ else{
    
     ValuePtr proc=this->eval(expr->toHead());
     //std::cout<<expr->toBack()->toString()<<std::endl;
      std::vector<ValuePtr> args=evalList(expr->toBack());
      //for (auto i:args)std::cout<<"apply"<<i->toString()<<std::endl;
      return this->apply(proc, args);
-  }}
+  }}else throw LispError("Unimplement");
   }else return expr; 
-  
+  }
   
  
   if(expr->isBuiltin())
   {
     return std::move(expr);
   }
-  throw LispError("NotMatchUnimplemented");
+  throw LispError("Unimplemented");
 }
 
 std::vector<ValuePtr> EvalEnv::evalList(ValuePtr expr) {
@@ -89,21 +89,6 @@ ValuePtr EvalEnv::apply(ValuePtr proc, std::vector<ValuePtr> args)
     return(dynamic_cast<BuiltinProcValue*>(proc.get()))->asfunc()(args);
     
    }else{
-    throw LispError(proc->toString()+"Unimplemented");
+    throw LispError("Unimplemented");
    }
-}
-
-ValuePtr defineForm(const std::vector<ValuePtr>& args, EvalEnv& env) 
-{
-    if (auto name = args[0]->asSymbol()) {
-        env.Push_Back(*name, args[1]);
-    } else {
-        throw LispError("Unimplemented");
-    }
-     return std::make_shared<NilValue>();
-}
-
-ValuePtr quoteForm(const std::vector<ValuePtr>& args, EvalEnv& env) 
-{
-  return args[1];
 }

@@ -87,6 +87,15 @@ public:
   std::string toString() ;
   BuiltinFuncType* asfunc();
 };
+class LambdaValue :public Value{
+private:
+    std::vector<std::string> params;
+    std::vector<ValuePtr> body;
+public:
+     LambdaValue()=default;
+     LambdaValue(std::vector<std::string>& params,std::vector<ValuePtr>& body);
+     std::string toString(); 
+};
 
 
 #endif

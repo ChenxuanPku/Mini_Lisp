@@ -81,7 +81,8 @@ std::vector<ValuePtr> PairValue::toVector(){
     return Vec;
   }*/
   if(car!=nullptr)
-     if(typeid(*car)!=typeid(NilValue)){Vec.push_back(car);
+    // if(typeid(*car)!=typeid(NilValue))
+     {Vec.push_back(car);
      /* if (typeid(*car)!=typeid(PairValue)) Vec.push_back(car);
     else{
       for(auto i:car->toVector())
@@ -137,3 +138,8 @@ ValuePtr PairValue::toBack(){
   return cdr;
 }
 
+LambdaValue::LambdaValue(std::vector<std::string>& params,std::vector<ValuePtr>& body):params(params),body(body){}
+std::string LambdaValue::toString()
+{
+  return "#<procedure>";
+}
