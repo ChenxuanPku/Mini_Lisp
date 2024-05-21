@@ -143,3 +143,6 @@ std::string LambdaValue::toString()
 {
   return "#<procedure>";
 }
+ValuePtr apply(const std::vector<ValuePtr>& args){
+  
+}

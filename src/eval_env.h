@@ -13,10 +13,11 @@ private:
     ValuePtr apply(ValuePtr proc, std::vector<ValuePtr> args);
     std::shared_ptr<EvalEnv> parent{nullptr};
    // std::vector<ValuePtr> ToVector(ValuePtr expr);
-private:
+
     std::unordered_map<std::string,ValuePtr> SymbolMap;
-public:
     EvalEnv();
+public:
+    static std::shared_ptr<EvalEnv> createGlobal();
     ValuePtr eval(ValuePtr expr);
     void Push_Back(std::string str,ValuePtr valueptr );
     ValuePtr lookupBinding(std::string str);

@@ -73,6 +73,10 @@ ValuePtr EvalEnv::apply(ValuePtr proc, std::vector<ValuePtr> args)
     return(dynamic_cast<BuiltinProcValue*>(proc.get()))->asfunc()(args);
     
    }else{
+    if(typeid(*proc)==typeid(LambdaValue))
+    {
+      return (dynamic_cast<LambdaValue*>(proc.get()))->apply(args);
+    }
     throw LispError("Unimplemented");
    }
 }
@@ -84,4 +88,8 @@ ValuePtr EvalEnv::lookupBinding(std::string str){
 
 ValuePtr EvalEnv::defineBinding(){
   
+}
+std::shared_ptr<EvalEnv> EvalEnv::createGlobal()
+{
+  return std::shared_ptr<EvalEnv>(new EvalEnv());
 }
