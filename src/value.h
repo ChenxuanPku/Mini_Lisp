@@ -87,13 +87,15 @@ public:
   std::string toString() ;
   BuiltinFuncType* asfunc();
 };
+class EvalEnv;
 class LambdaValue :public Value{
 private:
     std::vector<std::string> params;
     std::vector<ValuePtr> body;
+    std::shared_ptr<EvalEnv> env;
 public:
      LambdaValue()=default;
-     LambdaValue(std::vector<std::string>& params,std::vector<ValuePtr>& body);
+     LambdaValue(std::vector<std::string>& params,std::vector<ValuePtr>& body,std::shared_ptr<EvalEnv> env);
      std::string toString(); 
 };
 

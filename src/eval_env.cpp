@@ -2,6 +2,7 @@
 #include "./error.h"
 #include "./builtins.h"
 #include "./forms.h"
+#include "./value.h"
 #include<iostream>
 #include <algorithm>
 #include <iterator>
@@ -17,12 +18,7 @@ ValuePtr EvalEnv::eval(ValuePtr expr){
   if(expr->isSymbol()){ 
   if (auto name=expr->asSymbol())
   {
-    auto value=SymbolMap.find(*name);
-    if(value!=SymbolMap.end()){
-      return value->second;
-    }else {
-        throw LispError("Variable " + *name + " not defined.");
-    }
+    return lookupBinding(*name);
   }}
   //std::cout<<"eval"<<expr->toString()<<std::endl;
   if(expr->isBoolean()||expr->isNumeric()||expr->isString())
@@ -42,19 +38,7 @@ ValuePtr EvalEnv::eval(ValuePtr expr){
              return (it->second)(expr->toBack()->toVector(), *this);
             //(SPECIAL_FORMS[*name].second)(expr->toBack()->toVector(), *this);
            }
-/*
-      if (expr->toHead()->asSymbol() == "define"s) 
-      {
-       
-        std::vector<ValuePtr> v = (expr->toBack())->toVector();
-        //for (ValuePtr vp:v)std::cout<<vp->toString()<<" ";
-        if (auto name = v[0]->asSymbol()){
-          if(auto newname=v[1]->asSymbol()) SymbolMap[*name]=SymbolMap[*newname];
-          else SymbolMap[*name]=eval(v[1]);
-          return std::make_shared<NilValue>();
-         }
-      else throw LispError(v[0]->toString()+"Malformed define.");
-     }*/ else{
+else{
    
     ValuePtr proc=this->eval(expr->toHead());
     //std::cout<<expr->toBack()->toString()<<std::endl;
@@ -91,4 +75,13 @@ ValuePtr EvalEnv::apply(ValuePtr proc, std::vector<ValuePtr> args)
    }else{
     throw LispError("Unimplemented");
    }
+}
+ValuePtr EvalEnv::lookupBinding(std::string str){
+   if (SymbolMap.find(str)!=SymbolMap.end())return SymbolMap[str];
+   if (parent==nullptr)  throw LispError("Variable " + str + " not defined.");
+   return parent->lookupBinding(str);
+}
+
+ValuePtr EvalEnv::defineBinding(){
+  
 }

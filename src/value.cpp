@@ -138,7 +138,7 @@ ValuePtr PairValue::toBack(){
   return cdr;
 }
 
-LambdaValue::LambdaValue(std::vector<std::string>& params,std::vector<ValuePtr>& body):params(params),body(body){}
+LambdaValue::LambdaValue(std::vector<std::string>& params,std::vector<ValuePtr>& body,std::shared_ptr<EvalEnv> env):params(params),body(body),env(env){}
 std::string LambdaValue::toString()
 {
   return "#<procedure>";

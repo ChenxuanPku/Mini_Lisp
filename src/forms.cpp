@@ -19,7 +19,7 @@ ValuePtr defineForm(const std::vector<ValuePtr>& args, EvalEnv& env)
                 for(auto s:args[0]->toBack()->toVector())
                   para.push_back(s->toString());
                 std::vector<ValuePtr> body(args.begin()+1,args.end());
-                env.Push_Back(*name,std::make_shared<LambdaValue>(para,body));
+                env.Push_Back(*name,std::make_shared<LambdaValue>(para,body,env.shared_from_this()));
             }
         }
     }
@@ -63,5 +63,5 @@ ValuePtr lambdaForm(const std::vector<ValuePtr>& args, EvalEnv& env) {
     std::vector<std::string>params{};
     for(auto i:args[0]->toVector())params.push_back(i->toString());
     std::vector<ValuePtr> body{args[1]->toVector()};
-    return std::make_shared<LambdaValue>(params,body);
+    return std::make_shared<LambdaValue>(params,body,env.shared_from_this());
 }
