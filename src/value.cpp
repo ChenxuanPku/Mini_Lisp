@@ -143,6 +143,11 @@ std::string LambdaValue::toString()
 {
   return "#<procedure>";
 }
-ValuePtr apply(const std::vector<ValuePtr>& args){
-  
+ValuePtr LambdaValue::apply(const std::vector<ValuePtr>& args){
+  std::shared_ptr<EvalEnv> NewEnv = env->createChild(params,args);
+  for(int i{0};i!=body.size();i++)
+  {
+    auto result=NewEnv->eval(body[i]);
+    if(i==body.size()-1)return result;
+  }
 }

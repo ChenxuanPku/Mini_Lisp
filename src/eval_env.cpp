@@ -93,3 +93,16 @@ std::shared_ptr<EvalEnv> EvalEnv::createGlobal()
 {
   return std::shared_ptr<EvalEnv>(new EvalEnv());
 }
+std::shared_ptr<EvalEnv> EvalEnv::createChild(const std::vector<std::string>& params, const std::vector<ValuePtr>& args){
+  auto result=std::shared_ptr<EvalEnv>(new EvalEnv());
+  result->parent=this->shared_from_this();
+  int size_1=params.size();
+  int size_2=args.size();
+  if(size_1!=size_2) throw LispError("notMatch");
+
+  for(int i{0};i!=size_1;i++)
+  {
+    result->Push_Back(params[i],args[i]);
+  }
+  return result;
+}
