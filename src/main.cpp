@@ -19,7 +19,7 @@ struct TestCtx {
     }
 };
 int main() {
-    //RJSJ_TEST(TestCtx, Lv2, Lv3, Lv4, Lv5);
+   RJSJ_TEST(TestCtx, Lv2, Lv3, Lv4, Lv5, Lv5Extra, Lv6);
     std::shared_ptr<EvalEnv> env = EvalEnv::createGlobal();
     while (true) {
         try {
@@ -32,10 +32,8 @@ int main() {
             auto tokens = Tokenizer::tokenize(line);
             Parser parser(std::move(tokens)); // TokenPtr 不支持复制
             auto value = parser.parse();
-            //std::cout << value->toString() << std::endl;
             auto result = env->eval(std::move(value));
             std::cout << result->toString() << std::endl;
-            
         } catch (std::runtime_error& e) {
             std::cerr << "Error: " << e.what() << std::endl;
         }

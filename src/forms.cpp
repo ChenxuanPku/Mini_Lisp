@@ -1,10 +1,10 @@
 #include "./forms.h"
 #include "./error.h"
+#include <iostream>
 const std::unordered_map<std::string, SpecialFormType*> SPECIAL_FORMS{
     {"define", defineForm},{"quote",quoteForm},{"if",ifForm},{"and",andForm},{"or",orForm}
     ,{"lambda",lambdaForm}
     };
-
 
 ValuePtr defineForm(const std::vector<ValuePtr>& args, EvalEnv& env) 
 {
@@ -29,12 +29,10 @@ ValuePtr defineForm(const std::vector<ValuePtr>& args, EvalEnv& env)
 ValuePtr quoteForm(const std::vector<ValuePtr>& args, EvalEnv& env) 
 { 
   if (args.empty())return std::shared_ptr<NilValue>();
-  //for(auto i:args)std::cout<<i->toString()<<" ";
   return std::move(args[0]);
 }
 ValuePtr ifForm(const std::vector<ValuePtr>& args, EvalEnv& env) {
   auto ans=env.eval(args[0]);
-  //std::cout<<ans->toString()<<std::endl;
   if(ans->toString()=="#f") return env.eval(args[2]);
   return env.eval(args[1]);
 }
@@ -54,14 +52,12 @@ ValuePtr orForm(const std::vector<ValuePtr>& args, EvalEnv& env){
     {
         auto ans=env.eval(args[i]);
         if(ans->toString()!="#f")return ans;
-
     }
      return std::make_shared<BooleanValue>(false);
 }
 ValuePtr lambdaForm(const std::vector<ValuePtr>& args, EvalEnv& env) {
-    
     std::vector<std::string>params{};
     for(auto i:args[0]->toVector())params.push_back(i->toString());
-    std::vector<ValuePtr> body{args[1]->toVector()};
+    std::vector<ValuePtr> body(args.begin()+1,args.end());
     return std::make_shared<LambdaValue>(params,body,env.shared_from_this());
 }

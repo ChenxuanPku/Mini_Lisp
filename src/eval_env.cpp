@@ -11,6 +11,7 @@ EvalEnv::EvalEnv(){
   SymbolMap["print"]=std::make_shared<BuiltinProcValue>(&print);
   SymbolMap["*"]=std::make_shared<BuiltinProcValue>(&times);
   SymbolMap[">"]=std::make_shared<BuiltinProcValue>(&greater);
+  SymbolMap["-"]=std::make_shared<BuiltinProcValue>(&minor);
 }
 
 void EvalEnv::Push_Back(std::string str,ValuePtr valueptr){
@@ -22,7 +23,6 @@ ValuePtr EvalEnv::eval(ValuePtr expr){
   {
     return lookupBinding(*name);
   }}
-  //std::cout<<"eval"<<expr->toString()<<std::endl;
   if(expr->isBoolean()||expr->isNumeric()||expr->isString())
     return std::move(expr);
   if(expr->isNil())
@@ -30,28 +30,25 @@ ValuePtr EvalEnv::eval(ValuePtr expr){
   if(expr->isPair())
   {
     using namespace std::literals; // 使用 s 后缀
-    
     if(expr->toHead()->isSymbol())
     {
       if(auto name=expr->toHead()->asSymbol())
-      {    auto it=SPECIAL_FORMS.find(*name);
+      {   
+        { auto it=SPECIAL_FORMS.find(*name);
            if(it!=SPECIAL_FORMS.end())
-           { //std::cout<<*name<<std::endl;
+           { 
              return (it->second)(expr->toBack()->toVector(), *this);
-            //(SPECIAL_FORMS[*name].second)(expr->toBack()->toVector(), *this);
-           }
-else{
-   
+           }}
+        ValuePtr proc=lookupBinding(*name);
+        std::vector<ValuePtr> args=evalList(expr->toBack());
+        return this->apply(proc, args);
+      }}
+   else{
     ValuePtr proc=this->eval(expr->toHead());
-    //std::cout<<expr->toBack()->toString()<<std::endl;
      std::vector<ValuePtr> args=evalList(expr->toBack());
-     //for (auto i:args)std::cout<<"apply"<<i->toString()<<std::endl;
      return this->apply(proc, args);
-  }}else throw LispError("Unimplement");
-  }else return expr; 
-  }
-  
- 
+  } 
+ }
   if(expr->isBuiltin())
   {
     return std::move(expr);
@@ -60,12 +57,10 @@ else{
 }
 
 std::vector<ValuePtr> EvalEnv::evalList(ValuePtr expr) {
-    
     std::vector<ValuePtr> result;
     std::ranges::transform(expr->toVector(),
                            std::back_inserter(result),
                            [this](ValuePtr v) { return this->eval(v); });
-   
     return result;
 }
 
@@ -73,7 +68,6 @@ ValuePtr EvalEnv::apply(ValuePtr proc, std::vector<ValuePtr> args)
 {
    if (typeid(*proc) == typeid(BuiltinProcValue)){
     return(dynamic_cast<BuiltinProcValue*>(proc.get()))->asfunc()(args);
-    
    }else{
     if(typeid(*proc)==typeid(LambdaValue))
     {
@@ -89,7 +83,6 @@ ValuePtr EvalEnv::lookupBinding(std::string str){
 }
 
 ValuePtr EvalEnv::defineBinding(){
-  
 }
 std::shared_ptr<EvalEnv> EvalEnv::createGlobal()
 {
@@ -101,7 +94,6 @@ std::shared_ptr<EvalEnv> EvalEnv::createChild(const std::vector<std::string>& pa
   int size_1=params.size();
   int size_2=args.size();
   if(size_1!=size_2) throw LispError("notMatch");
-
   for(int i{0};i!=size_1;i++)
   {
     result->Push_Back(params[i],args[i]);

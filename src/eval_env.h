@@ -8,12 +8,8 @@ class Value;
 using ValuePtr = std::shared_ptr<Value>; 
 class EvalEnv : public std::enable_shared_from_this<EvalEnv>  {
 private:
-    
     std::vector<ValuePtr> evalList(ValuePtr expr);
     ValuePtr apply(ValuePtr proc, std::vector<ValuePtr> args);
-   
-   // std::vector<ValuePtr> ToVector(ValuePtr expr);
-
     std::unordered_map<std::string,ValuePtr> SymbolMap;
     EvalEnv();
 public:
@@ -25,5 +21,4 @@ public:
     ValuePtr defineBinding(); 
     std::shared_ptr<EvalEnv> parent{nullptr};
 };
-
 #endif

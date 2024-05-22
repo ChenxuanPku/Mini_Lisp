@@ -11,6 +11,17 @@ ValuePtr add(const std::vector<ValuePtr>& params){
     
   }return std::make_shared<NumericValue>(result);
 }
+ValuePtr minor(const std::vector<ValuePtr>& params){
+  double result=0;
+  for (int i{0};i!=params.size();i++)
+  {
+    if(!params[i]->isNumeric())
+      throw LispError("Cannot add a non-numeric value.");
+    if(i!=0)
+    result-=params[i]->asNumber();
+    else result=params[i]->asNumber();
+  }return std::make_shared<NumericValue>(result);
+}
 ValuePtr print(const std::vector<ValuePtr>& params)
 {
   for (const auto& i:params){

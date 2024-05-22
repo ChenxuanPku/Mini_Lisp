@@ -84,18 +84,9 @@ ValuePtr Parser::parseTails(){
     if (tokens.front()->toString()=="(DOT)")
     {
         tokens.pop_front();
-        
-        
         if (tokens.empty()) throw SyntaxError("Empty3");
         auto cdr=this->parse();
-        //std::cout<<tokens.front()<<std::endl;
-       // if (tokens.front()->toString()!="(RIGHT_PAREN)")
-       // 这里理应有检测点，但不知道为什么写不过去
-       
-            
             return std::make_shared<PairValue>(car,cdr);
-        
-       // else throw SyntaxError("Not_Rightparen");
     }
     else{
         auto cdr=this->parseTails();

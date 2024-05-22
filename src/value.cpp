@@ -21,7 +21,6 @@ std::string NumericValue::toString()
         str.pop_back();
   }
   return str;
-  
 }    
 StringValue:: StringValue(std::string str): stringValue{str}{}
 std::string StringValue::toString()
@@ -42,7 +41,6 @@ std::string NilValue::toString()
 PairValue::PairValue(ValuePtr car,ValuePtr cdr):car(car),cdr(cdr){}
 std::string PairValue::toString()
 {
-  
   std::ostringstream os;
   os<<"("<<car->toString()<<" ";
   ValuePtr pnow=cdr;
@@ -72,23 +70,10 @@ std::vector<ValuePtr> Value::toVector(){
   throw LispError(this->toString()+" notList");
 }
 std::vector<ValuePtr> PairValue::toVector(){
- // std::cout<<"tovec"<<toString()<<std::endl;
   std::vector<ValuePtr> Vec{};
   if(typeid(*this)==typeid(NilValue))return Vec;
- /* if(car->isSymbol()){
-    Vec.push_back(std::make_shared<PairValue>(car,cdr));
-   // std::cout<<"111"<<std::endl;
-    return Vec;
-  }*/
   if(car!=nullptr)
-    // if(typeid(*car)!=typeid(NilValue))
-     {Vec.push_back(car);
-     /* if (typeid(*car)!=typeid(PairValue)) Vec.push_back(car);
-    else{
-      for(auto i:car->toVector())
-        if(typeid(*i)!=typeid(NilValue))
-          Vec.push_back(i);}
-          */} 
+     {Vec.push_back(car);} 
  if(cdr!=nullptr)
      if(typeid(*cdr)!=typeid(NilValue)){
       if (typeid(*cdr)!=typeid(PairValue)) Vec.push_back(cdr);
