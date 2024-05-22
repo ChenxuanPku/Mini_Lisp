@@ -9,6 +9,8 @@
 EvalEnv::EvalEnv(){
   SymbolMap["+"]=std::make_shared<BuiltinProcValue>(&add);
   SymbolMap["print"]=std::make_shared<BuiltinProcValue>(&print);
+  SymbolMap["*"]=std::make_shared<BuiltinProcValue>(&times);
+  SymbolMap[">"]=std::make_shared<BuiltinProcValue>(&greater);
 }
 
 void EvalEnv::Push_Back(std::string str,ValuePtr valueptr){

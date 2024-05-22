@@ -19,3 +19,23 @@ ValuePtr print(const std::vector<ValuePtr>& params)
   std::cout<<std::endl;
   return std::make_shared<NilValue>();
 }
+
+ValuePtr times(const std::vector<ValuePtr>& params){
+  double result=1;
+  for (auto i:params)
+  {
+    if (i->isNumeric())
+      result*=i->asNumber();
+    else throw LispError("NotNumerical");
+  }
+  return std::make_shared<NumericValue>(result);
+}
+ValuePtr greater(const std::vector<ValuePtr>& params){
+  if (params.size()!=2)
+    throw LispError("not Two to compare");
+  if(params[0]->isNumeric()&&params[0]->isNumeric())
+  {
+    return std::make_shared<BooleanValue>(params[0]->asNumber()>params[1]->asNumber());
+  }
+  else throw LispError("notNumerical");
+}
