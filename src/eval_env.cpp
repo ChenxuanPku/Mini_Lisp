@@ -15,8 +15,7 @@ EvalEnv::EvalEnv(){
   SymbolMap["-"]=std::make_shared<BuiltinProcValue>(&minor);
   std::function<BuiltinFuncType> Apply=[this](const std::vector<ValuePtr>& params){
       ValuePtr  proc=params[0];
-      std::vector<ValuePtr> args(params.begin()+1,params.end());
-      std::cout<<"Apply"<<std::endl;
+      std::vector<ValuePtr> args(params[1]->toVector());
       return this->apply(proc,args);
   } ;
   SymbolMap["apply"]=std::make_shared<BuiltinProcValue>(Apply.target<BuiltinFuncType>());
@@ -25,18 +24,6 @@ EvalEnv::EvalEnv(){
       return this->eval(params[0]);
   };
   SymbolMap["eval"]=std::make_shared<BuiltinProcValue>(Eval.target<BuiltinFuncType>());
-
-  /*
-  SymbolMap["apply"]=std::make_shared<BuiltinProcValue>(std::make_shared<BuiltinFuncType>
-  ([this](const std::vector<ValuePtr>& params){
-      ValuePtr  proc=params[0];
-      std::vector<ValuePtr> args(params.begin()+1,params.end());
-      return this->apply(proc,args);
-  }));
-  SymbolMap["eval"]=std::make_shared<BuiltinProcValue>(std::make_shared<BuiltinFuncType>
-  ([this](const std::vector<ValuePtr>& params){
-      return this->eval(params[0]);
-  }));*/
 }
 
 void EvalEnv::Push_Back(std::string str,ValuePtr valueptr){
@@ -58,18 +45,22 @@ ValuePtr EvalEnv::eval(ValuePtr expr){
     if(expr->toHead()->isSymbol())
     {
       if(auto name=expr->toHead()->asSymbol())
-      {   
+      {  
         { auto it=SPECIAL_FORMS.find(*name);
+          
            if(it!=SPECIAL_FORMS.end())
            { 
              return (it->second)(expr->toBack()->toVector(), *this);
            }}
         ValuePtr proc=lookupBinding(*name);
         std::vector<ValuePtr> args=evalList(expr->toBack());
+        std::cout<<"ready"<<std::endl;
+        for(auto i:args)std::cout<<i->toString()<<std::endl;
         return this->apply(proc, args);
       }}
    else{
-    ValuePtr proc=this->eval(expr->toHead());
+     ValuePtr proc=this->eval(expr->toHead());
+     if(typeid(*proc)!=typeid(LambdaValue)&&typeid(*proc)!=typeid(BuiltinProcValue))return expr;
      std::vector<ValuePtr> args=evalList(expr->toBack());
      return this->apply(proc, args);
   } 
@@ -98,11 +89,12 @@ ValuePtr EvalEnv::apply(ValuePtr proc, std::vector<ValuePtr> args)
     {
       return (dynamic_cast<LambdaValue*>(proc.get()))->apply(args);
     }
-    throw LispError("ApplyUnimplemented");
+    throw LispError("ApplyUnimplemented"+proc->toString());
    }
 }
 ValuePtr EvalEnv::lookupBinding(std::string str){
-   if (SymbolMap.find(str)!=SymbolMap.end())return SymbolMap[str];
+  
+   if (SymbolMap.find(str)!=SymbolMap.end()){return SymbolMap[str];}
    if (parent==nullptr)  throw LispError("Variable " + str + " not defined.");
    return parent->lookupBinding(str);
 }

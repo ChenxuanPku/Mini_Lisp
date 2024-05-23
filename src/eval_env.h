@@ -12,6 +12,8 @@ private:
     ValuePtr apply(ValuePtr proc, std::vector<ValuePtr> args);
     std::unordered_map<std::string,ValuePtr> SymbolMap;
     EvalEnv();
+    ValuePtr Apply(const std::vector<ValuePtr>& params, EvalEnv* env);
+    
 public:
     static std::shared_ptr<EvalEnv> createGlobal();
     std::shared_ptr<EvalEnv> createChild(const std::vector<std::string>& params, const std::vector<ValuePtr>& args);
