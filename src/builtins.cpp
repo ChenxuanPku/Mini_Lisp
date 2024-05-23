@@ -1,5 +1,6 @@
 #include "./builtins.h"
 #include "./error.h"
+#include "./eval_env.h"
 #include<iostream>
 ValuePtr add(const std::vector<ValuePtr>& params){
   double result=0;
@@ -50,3 +51,4 @@ ValuePtr greater(const std::vector<ValuePtr>& params){
   }
   else throw LispError("notNumerical");
 }
+

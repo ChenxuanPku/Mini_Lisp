@@ -20,5 +20,6 @@ public:
     ValuePtr lookupBinding(std::string str);
     ValuePtr defineBinding(); 
     std::shared_ptr<EvalEnv> parent{nullptr};
+    
 };
 #endif

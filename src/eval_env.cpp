@@ -3,6 +3,7 @@
 #include "./builtins.h"
 #include "./forms.h"
 #include "./value.h"
+#include<functional>
 #include<iostream>
 #include <algorithm>
 #include <iterator>
@@ -12,6 +13,30 @@ EvalEnv::EvalEnv(){
   SymbolMap["*"]=std::make_shared<BuiltinProcValue>(&times);
   SymbolMap[">"]=std::make_shared<BuiltinProcValue>(&greater);
   SymbolMap["-"]=std::make_shared<BuiltinProcValue>(&minor);
+  std::function<BuiltinFuncType> Apply=[this](const std::vector<ValuePtr>& params){
+      ValuePtr  proc=params[0];
+      std::vector<ValuePtr> args(params.begin()+1,params.end());
+      std::cout<<"Apply"<<std::endl;
+      return this->apply(proc,args);
+  } ;
+  SymbolMap["apply"]=std::make_shared<BuiltinProcValue>(Apply.target<BuiltinFuncType>());
+  std::function<BuiltinFuncType> Eval=[this](const std::vector<ValuePtr>& params){
+      std::cout<<"Eval"<<std::endl;
+      return this->eval(params[0]);
+  };
+  SymbolMap["eval"]=std::make_shared<BuiltinProcValue>(Eval.target<BuiltinFuncType>());
+
+  /*
+  SymbolMap["apply"]=std::make_shared<BuiltinProcValue>(std::make_shared<BuiltinFuncType>
+  ([this](const std::vector<ValuePtr>& params){
+      ValuePtr  proc=params[0];
+      std::vector<ValuePtr> args(params.begin()+1,params.end());
+      return this->apply(proc,args);
+  }));
+  SymbolMap["eval"]=std::make_shared<BuiltinProcValue>(std::make_shared<BuiltinFuncType>
+  ([this](const std::vector<ValuePtr>& params){
+      return this->eval(params[0]);
+  }));*/
 }
 
 void EvalEnv::Push_Back(std::string str,ValuePtr valueptr){
@@ -73,7 +98,7 @@ ValuePtr EvalEnv::apply(ValuePtr proc, std::vector<ValuePtr> args)
     {
       return (dynamic_cast<LambdaValue*>(proc.get()))->apply(args);
     }
-    throw LispError("Unimplemented");
+    throw LispError("ApplyUnimplemented");
    }
 }
 ValuePtr EvalEnv::lookupBinding(std::string str){
