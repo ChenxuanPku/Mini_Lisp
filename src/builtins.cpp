@@ -122,7 +122,10 @@ ValuePtr ifNull(const std::vector<ValuePtr>& params)
 {
   if(params.empty()) 
   return std::make_shared<BooleanValue>(true);
-  else return std::make_shared<BooleanValue>(false);
+
+  else if(params.size()==1&&params[0]->isNil())
+  return std::make_shared<BooleanValue>(true);
+  return std::make_shared<BooleanValue>(false);
 }
 ValuePtr ifPair(const std::vector<ValuePtr>& params)
 {
@@ -150,5 +153,33 @@ ValuePtr ifSymbol(const std::vector<ValuePtr>& params)
   if(params.size()!=1) throw LispError("wrongSize");
   if(params[0]->isSymbol())
   return std::make_shared<BooleanValue>(true);
+  else return std::make_shared<BooleanValue>(false);
+}
+
+ValuePtr Rcar(const std::vector<ValuePtr>& params)
+{
+  if(params.size()!=1) throw LispError("wrongSize");
+  return params[0]->toHead();
+}
+ValuePtr Rcdr(const std::vector<ValuePtr>& params)
+{
+  if(params.size()!=1) throw LispError("wrongSize");
+  return params[0]->toBack();
+}
+
+ValuePtr ifList(const std::vector<ValuePtr>& params)
+{
+  if(params.size()!=1) throw LispError("wrongSize");
+  if(params[0]->isNil())return std::make_shared<BooleanValue>(true);
+  if(params[0]->isPair())
+  { ValuePtr now{params[0]};
+  
+    while(now->isPair())
+    {
+      now=now->toBack();
+      if(now->isNil())return std::make_shared<BooleanValue>(true);
+      
+    }
+    return std::make_shared<BooleanValue>(false);}
   else return std::make_shared<BooleanValue>(false);
 }

@@ -19,7 +19,7 @@ EvalEnv::EvalEnv(){
   BuiltinFuncType* applyFunc = Apply.target<BuiltinFuncType>(); 
   auto tmp=std::make_shared<BuiltinProcValue>(applyFunc);
   std::cout<<tmp->toString();
-  SymbolMap["apply"]=tmp;
+  //SymbolMap["apply"]=tmp;
   //std::cout<<typeid(BuiltinFuncType*).name()<<std::endl;
   //std::cout<<typeid(std::function<BuiltinFuncType>).name()<<std::endl;
   //std::cout<<Apply.target_type().name()<<std::endl;
@@ -43,12 +43,15 @@ EvalEnv::EvalEnv(){
   SymbolMap["atom?"]=std::make_shared<BuiltinProcValue>(&ifAtom);
   SymbolMap["boolean?"]=std::make_shared<BuiltinProcValue>(&ifBoolean);
   SymbolMap["integer?"]=std::make_shared<BuiltinProcValue>(&ifInteger);
+  SymbolMap["list?"]=std::make_shared<BuiltinProcValue>(&ifList);
   SymbolMap["number?"]=std::make_shared<BuiltinProcValue>(&ifNumber);
   SymbolMap["null?"]=std::make_shared<BuiltinProcValue>(&ifNull);
   SymbolMap["pair?"]=std::make_shared<BuiltinProcValue>(&ifPair);
   SymbolMap["procedure?"]=std::make_shared<BuiltinProcValue>(&ifProcedure);
   SymbolMap["string?"]=std::make_shared<BuiltinProcValue>(&ifString);
   SymbolMap["symbol?"]=std::make_shared<BuiltinProcValue>(&ifSymbol);
+  SymbolMap["car"]=std::make_shared<BuiltinProcValue>(&Rcar);
+  SymbolMap["cdr"]=std::make_shared<BuiltinProcValue>(&Rcdr);
  // SymbolMap["displayln"]==std::make_shared<BuiltinProcValue>(&displayln);
 }
 
