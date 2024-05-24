@@ -52,6 +52,10 @@ EvalEnv::EvalEnv(){
   SymbolMap["symbol?"]=std::make_shared<BuiltinProcValue>(&ifSymbol);
   SymbolMap["car"]=std::make_shared<BuiltinProcValue>(&Rcar);
   SymbolMap["cdr"]=std::make_shared<BuiltinProcValue>(&Rcdr);
+  SymbolMap["cons"]=std::make_shared<BuiltinProcValue>(&cons);
+  SymbolMap["append"]=std::make_shared<BuiltinProcValue>(&append);
+  SymbolMap["length"]=std::make_shared<BuiltinProcValue>(&length);
+  SymbolMap["list"]=std::make_shared<BuiltinProcValue>(&list);
  // SymbolMap["displayln"]==std::make_shared<BuiltinProcValue>(&displayln);
 }
 

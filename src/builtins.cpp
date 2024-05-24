@@ -183,3 +183,40 @@ ValuePtr ifList(const std::vector<ValuePtr>& params)
     return std::make_shared<BooleanValue>(false);}
   else return std::make_shared<BooleanValue>(false);
 }
+ValuePtr cons(const std::vector<ValuePtr>& params)
+{
+  if(params.size()!=2) throw LispError("wrongSize");
+  return std::make_shared<PairValue>(params[0],params[1]);
+}
+ValuePtr append(const std::vector<ValuePtr>& params)
+{
+  
+  std::vector<ValuePtr> vec{};
+  for( auto v:params)
+  {
+    for(auto a:v->toVector())
+    vec.push_back(a);
+  }
+  
+  int length=vec.size();
+  if(length==0) return std::make_shared<NilValue>();
+  ValuePtr result=std::make_shared<PairValue>(vec[length-1],std::make_shared<NilValue>());
+  for(int i{length-2};i>=0;i--)
+  result=std::make_shared<PairValue>(vec[i],result);
+  return result;
+}
+
+ValuePtr length(const std::vector<ValuePtr>& params)
+{if(params.size()!=1) throw LispError("wrongSize");
+  return std::make_shared<NumericValue>((params[0]->toVector()).size());
+}
+
+ValuePtr list(const std::vector<ValuePtr>& params)
+{
+  if(params.empty()) return std::make_shared<NilValue>();
+  int length=params.size();
+  ValuePtr result=std::make_shared<PairValue>(params[length-1],std::make_shared<NilValue>());
+  for(int i{length-2};i>=0;i--)
+  result=std::make_shared<PairValue>(params[i],result);
+  return result;
+}
