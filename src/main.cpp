@@ -19,8 +19,12 @@ struct TestCtx {
     }
 };
 int main() {
-   //RJSJ_TEST(TestCtx, Lv2, Lv3, Lv4, Lv5, Lv5Extra, Lv6);
+   //RJSJ_TEST(TestCtx,Lv7Lib);
+   
     std::shared_ptr<EvalEnv> env = EvalEnv::createGlobal();
+  // auto tmp =env->lookupBinding("apply");
+ //  auto Builtin{dynamic_cast<BuiltinProcValue*>(tmp.get())};
+   //std::cout<<Builtin->asfunc()<<std::endl;
     while (true) {
         try {
             std::cout << ">>> " ;

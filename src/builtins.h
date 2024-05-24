@@ -2,24 +2,24 @@
 #define BUILTINS_H
 #include "./value.h"
 
-ValuePtr add(const std::vector<ValuePtr>& params);
-ValuePtr minor(const std::vector<ValuePtr>& params);
-ValuePtr print(const std::vector<ValuePtr>& params);
-ValuePtr times(const std::vector<ValuePtr>& params);
-ValuePtr greater(const std::vector<ValuePtr>& params);
+ValuePtr add(const std::vector<ValuePtr>& params);//
+ValuePtr minor(const std::vector<ValuePtr>& params);//
+ValuePtr print(const std::vector<ValuePtr>& params);//
+ValuePtr times(const std::vector<ValuePtr>& params);//
+ValuePtr greater(const std::vector<ValuePtr>& params);//
 
-ValuePtr display(const std::vector<ValuePtr>& params);
-ValuePtr displayln(const std::vector<ValuePtr>& params);
-ValuePtr error(const std::vector<ValuePtr>& params);
+ValuePtr display(const std::vector<ValuePtr>& params);//
+ValuePtr displayln(const std::vector<ValuePtr>& params);//
+ValuePtr error(const std::vector<ValuePtr>& params);//
 
-ValuePtr exit(const std::vector<ValuePtr>& params);
-ValuePtr newline(const std::vector<ValuePtr>& params);
-ValuePtr ifAtom(const std::vector<ValuePtr>& params);
-ValuePtr ifBoolean(const std::vector<ValuePtr>& params);
-ValuePtr ifInteger(const std::vector<ValuePtr>& params);
+ValuePtr Exit(const std::vector<ValuePtr>& params);//
+ValuePtr newline(const std::vector<ValuePtr>& params);//
+ValuePtr ifAtom(const std::vector<ValuePtr>& params);//
+ValuePtr ifBoolean(const std::vector<ValuePtr>& params);//
+ValuePtr ifInteger(const std::vector<ValuePtr>& params);//
 ValuePtr ifList(const std::vector<ValuePtr>& params);
-ValuePtr ifNumber(const std::vector<ValuePtr>& params);
-ValuePtr ifNull(const std::vector<ValuePtr>& params);
+ValuePtr ifNumber(const std::vector<ValuePtr>& params);//
+ValuePtr ifNull(const std::vector<ValuePtr>& params);//
 ValuePtr ifPair(const std::vector<ValuePtr>& params);
 ValuePtr ifProcedure(const std::vector<ValuePtr>& params);
 ValuePtr ifString(const std::vector<ValuePtr>& params);

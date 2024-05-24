@@ -8,11 +8,6 @@
 #include <algorithm>
 #include <iterator>
 EvalEnv::EvalEnv(){
-  SymbolMap["+"]=std::make_shared<BuiltinProcValue>(&add);
-  SymbolMap["print"]=std::make_shared<BuiltinProcValue>(&print);
-  SymbolMap["*"]=std::make_shared<BuiltinProcValue>(&times);
-  SymbolMap[">"]=std::make_shared<BuiltinProcValue>(&greater);
-  SymbolMap["-"]=std::make_shared<BuiltinProcValue>(&minor);
   std::function<BuiltinFuncType> Apply=[this](const std::vector<ValuePtr>& params){
       std::cout<<"Apply"<<std::endl;
       if (params.size()!=2) throw LispError("SizeError");
@@ -20,18 +15,48 @@ EvalEnv::EvalEnv(){
       std::vector<ValuePtr> args(params[1]->toVector());
       return this->apply(proc,args);
   } ;
-  SymbolMap["apply"]=std::make_shared<BuiltinProcValue>(Apply.target<BuiltinFuncType>());
+   
+  BuiltinFuncType* applyFunc = Apply.target<BuiltinFuncType>(); 
+  auto tmp=std::make_shared<BuiltinProcValue>(applyFunc);
+  std::cout<<tmp->toString();
+  SymbolMap["apply"]=tmp;
+  //std::cout<<typeid(BuiltinFuncType*).name()<<std::endl;
+  //std::cout<<typeid(std::function<BuiltinFuncType>).name()<<std::endl;
+  //std::cout<<Apply.target_type().name()<<std::endl;
+  //BuiltinFuncType* applyFunc = Apply.target<BuiltinFuncType>();
+ 
   std::function<BuiltinFuncType> Eval=[this](const std::vector<ValuePtr>& params){
-      std::cout<<"Eval"<<std::endl;
+     
       return this->eval(params[0]);
   };
-  SymbolMap["eval"]=std::make_shared<BuiltinProcValue>(Eval.target<BuiltinFuncType>());
+ // SymbolMap["eval"]=std::make_shared<BuiltinProcValue>(Eval.target<BuiltinFuncType>()); 
+  SymbolMap["+"]=std::make_shared<BuiltinProcValue>(&add);
+  SymbolMap["print"]=std::make_shared<BuiltinProcValue>(&print);
+  SymbolMap["*"]=std::make_shared<BuiltinProcValue>(&times);
+  SymbolMap[">"]=std::make_shared<BuiltinProcValue>(&greater);
+  SymbolMap["-"]=std::make_shared<BuiltinProcValue>(&minor);
+  SymbolMap["display"]=std::make_shared<BuiltinProcValue>(&display);
+  SymbolMap["displayln"]=std::make_shared<BuiltinProcValue>(&displayln);
+  SymbolMap["error"]=std::make_shared<BuiltinProcValue>(&error);
+  SymbolMap["exit"]=std::make_shared<BuiltinProcValue>(&Exit);
+  SymbolMap["newline"]=std::make_shared<BuiltinProcValue>(&newline);
+  SymbolMap["atom?"]=std::make_shared<BuiltinProcValue>(&ifAtom);
+  SymbolMap["boolean?"]=std::make_shared<BuiltinProcValue>(&ifBoolean);
+  SymbolMap["integer?"]=std::make_shared<BuiltinProcValue>(&ifInteger);
+  SymbolMap["number?"]=std::make_shared<BuiltinProcValue>(&ifNumber);
+  SymbolMap["null?"]=std::make_shared<BuiltinProcValue>(&ifNull);
+  SymbolMap["pair?"]=std::make_shared<BuiltinProcValue>(&ifPair);
+  SymbolMap["procedure?"]=std::make_shared<BuiltinProcValue>(&ifProcedure);
+  SymbolMap["string?"]=std::make_shared<BuiltinProcValue>(&ifString);
+  SymbolMap["symbol?"]=std::make_shared<BuiltinProcValue>(&ifSymbol);
+ // SymbolMap["displayln"]==std::make_shared<BuiltinProcValue>(&displayln);
 }
 
 void EvalEnv::Push_Back(std::string str,ValuePtr valueptr){
   SymbolMap[str]=valueptr;
 }
 ValuePtr EvalEnv::eval(ValuePtr expr){
+  
   if(expr->isSymbol()){ 
   if (auto name=expr->asSymbol())
   {
@@ -43,6 +68,7 @@ ValuePtr EvalEnv::eval(ValuePtr expr){
     throw LispError("Evaluating nil is prohibited.");
   if(expr->isPair())
   {
+    
     using namespace std::literals; // 使用 s 后缀
     if(expr->toHead()->isSymbol())
     {
@@ -56,7 +82,12 @@ ValuePtr EvalEnv::eval(ValuePtr expr){
            }}
         ValuePtr proc=lookupBinding(*name);
         std::vector<ValuePtr> args=evalList(expr->toBack());
-        return this->apply(proc, args);
+       
+        {
+          auto tesult =this->apply(proc, args);
+          std::cout<<tesult->isNil();
+          
+        return tesult;}
       }}
    else{
      ValuePtr proc=this->eval(expr->toHead());
@@ -82,15 +113,13 @@ std::vector<ValuePtr> EvalEnv::evalList(ValuePtr expr) {
 
 ValuePtr EvalEnv::apply(ValuePtr proc, std::vector<ValuePtr> args)
 {
-   //std::cout<<"envapply"<<std::endl;
    if (typeid(*proc) == typeid(BuiltinProcValue)){
-    //std::cout<<"builtinapply"<<std::endl;
+    
     auto Builtin{dynamic_cast<BuiltinProcValue*>(proc.get())};
     auto func=Builtin->asfunc();
-    //std::cout<<"funcDone"<<std::endl;;
-    std::cout<<Builtin->toString()<<std::endl;
+    
     ValuePtr result=func(args);
-    //std::cout<<"resultDone"<<std::endl;;
+    
     return result;
    }else{
     if(typeid(*proc)==typeid(LambdaValue))
@@ -102,7 +131,8 @@ ValuePtr EvalEnv::apply(ValuePtr proc, std::vector<ValuePtr> args)
 }
 ValuePtr EvalEnv::lookupBinding(std::string str){
   
-   if (SymbolMap.find(str)!=SymbolMap.end()){return SymbolMap[str];}
+   if (SymbolMap.find(str)!=SymbolMap.end()){
+    return SymbolMap[str];}
    if (parent==nullptr)  throw LispError("Variable " + str + " not defined.");
    return parent->lookupBinding(str);
 }

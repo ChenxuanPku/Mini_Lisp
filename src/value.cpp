@@ -70,6 +70,7 @@ std::vector<ValuePtr> Value::toVector(){
   throw LispError(this->toString()+" notList");
 }
 std::vector<ValuePtr> PairValue::toVector(){
+  
   std::vector<ValuePtr> Vec{};
   if(typeid(*this)==typeid(NilValue))return Vec;
   if(car!=nullptr)
@@ -82,6 +83,7 @@ std::vector<ValuePtr> PairValue::toVector(){
         if(typeid(*i)!=typeid(NilValue))
           Vec.push_back(i);}
           }
+ 
   return Vec;
 }
 std::optional<std::string> Value::asSymbol(){
@@ -90,7 +92,9 @@ std::optional<std::string> Value::asSymbol(){
 std::optional<std::string> SymbolValue::asSymbol(){
   return symbolValue;
 }
-BuiltinProcValue::BuiltinProcValue(BuiltinFuncType* func):func(func){}
+BuiltinProcValue::BuiltinProcValue(BuiltinFuncType* func):func(func){
+  
+}
 
 std::string BuiltinProcValue::toString()
 {
@@ -107,6 +111,7 @@ double NumericValue::asNumber()
 
 BuiltinFuncType* BuiltinProcValue::asfunc()
 {
+  if (func==nullptr)throw LispError("emptyPtr");
   //std::cout<<"func"<<std::endl;
   return func;
 }
