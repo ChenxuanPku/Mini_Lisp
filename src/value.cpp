@@ -107,6 +107,7 @@ double NumericValue::asNumber()
 
 BuiltinFuncType* BuiltinProcValue::asfunc()
 {
+  //std::cout<<"func"<<std::endl;
   return func;
 }
 ValuePtr Value::toBack(){

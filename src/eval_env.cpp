@@ -14,6 +14,8 @@ EvalEnv::EvalEnv(){
   SymbolMap[">"]=std::make_shared<BuiltinProcValue>(&greater);
   SymbolMap["-"]=std::make_shared<BuiltinProcValue>(&minor);
   std::function<BuiltinFuncType> Apply=[this](const std::vector<ValuePtr>& params){
+      std::cout<<"Apply"<<std::endl;
+      if (params.size()!=2) throw LispError("SizeError");
       ValuePtr  proc=params[0];
       std::vector<ValuePtr> args(params[1]->toVector());
       return this->apply(proc,args);
@@ -54,8 +56,6 @@ ValuePtr EvalEnv::eval(ValuePtr expr){
            }}
         ValuePtr proc=lookupBinding(*name);
         std::vector<ValuePtr> args=evalList(expr->toBack());
-        std::cout<<"ready"<<std::endl;
-        for(auto i:args)std::cout<<i->toString()<<std::endl;
         return this->apply(proc, args);
       }}
    else{
@@ -82,8 +82,16 @@ std::vector<ValuePtr> EvalEnv::evalList(ValuePtr expr) {
 
 ValuePtr EvalEnv::apply(ValuePtr proc, std::vector<ValuePtr> args)
 {
+   //std::cout<<"envapply"<<std::endl;
    if (typeid(*proc) == typeid(BuiltinProcValue)){
-    return(dynamic_cast<BuiltinProcValue*>(proc.get()))->asfunc()(args);
+    //std::cout<<"builtinapply"<<std::endl;
+    auto Builtin{dynamic_cast<BuiltinProcValue*>(proc.get())};
+    auto func=Builtin->asfunc();
+    //std::cout<<"funcDone"<<std::endl;;
+    std::cout<<Builtin->toString()<<std::endl;
+    ValuePtr result=func(args);
+    //std::cout<<"resultDone"<<std::endl;;
+    return result;
    }else{
     if(typeid(*proc)==typeid(LambdaValue))
     {
