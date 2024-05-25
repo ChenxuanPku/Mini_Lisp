@@ -353,8 +353,9 @@ ValuePtr ifOdd(const std::vector<ValuePtr>& params)
 
 ValuePtr ifZero(const std::vector<ValuePtr>& params)
 {
+  std::cout<<"zero?\n";
   if(params.size()!=1) throw LispError("wrongSize");
-  if(!(params[0]->isNumeric()))
-  throw LispError("Not a non-numeric value.");
+  if(params[0]->isNumeric())
   return std::make_shared<BooleanValue>(params[0]->asNumber()==0);
+  else throw LispError("Not int");
 }

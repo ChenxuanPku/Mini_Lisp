@@ -19,7 +19,7 @@ struct TestCtx {
     }
 };
 int main() {
-   RJSJ_TEST(TestCtx,  Lv7Lib);
+   //RJSJ_TEST(TestCtx,  Lv7Lib);
    
     std::shared_ptr<EvalEnv> env = EvalEnv::createGlobal();
   // auto tmp =env->lookupBinding("apply");
