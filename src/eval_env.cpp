@@ -8,6 +8,7 @@
 #include <algorithm>
 #include <iterator>
 EvalEnv::EvalEnv(){
+ 
   std::function<BuiltinFuncType> Apply=[this](const std::vector<ValuePtr>& params){
       std::cout<<"Apply"<<std::endl;
       if (params.size()!=2) throw LispError("SizeError");
@@ -15,14 +16,16 @@ EvalEnv::EvalEnv(){
       std::vector<ValuePtr> args(params[1]->toVector());
       return this->apply(proc,args);
   } ;
-   
-  BuiltinFuncType* applyFunc = Apply.target<BuiltinFuncType>(); 
-  auto tmp=std::make_shared<BuiltinProcValue>(applyFunc);
-  std::cout<<tmp->toString();
+  std::vector<ValuePtr>P{std::make_shared<BuiltinProcValue>(&add),std::make_shared<PairValue>(std::make_shared<NumericValue>(1),std::make_shared<NilValue>())};
+  //BuiltinFuncType applyFunc = reinterpret_cast<BuiltinFuncType>(Apply);
+ // auto tmp=std::make_shared<BuiltinProcValue>(&applyFunc);
+  std::cout<<Apply(P)->toString()<<std::endl;
+  if(Apply.target<BuiltinFuncType>()==nullptr) std::cout<<"nullptr"<<std::endl;
+  else std::cout<<"nonempty"<<std::endl;
   //SymbolMap["apply"]=tmp;
   //std::cout<<typeid(BuiltinFuncType*).name()<<std::endl;
   //std::cout<<typeid(std::function<BuiltinFuncType>).name()<<std::endl;
-  //std::cout<<Apply.target_type().name()<<std::endl;
+  
   //BuiltinFuncType* applyFunc = Apply.target<BuiltinFuncType>();
  
   std::function<BuiltinFuncType> Eval=[this](const std::vector<ValuePtr>& params){
