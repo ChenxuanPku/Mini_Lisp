@@ -7,7 +7,7 @@ ValuePtr minor(const std::vector<ValuePtr>& params);//
 ValuePtr print(const std::vector<ValuePtr>& params);//
 ValuePtr times(const std::vector<ValuePtr>& params);//
 ValuePtr greater(const std::vector<ValuePtr>& params);//
-
+ValuePtr smaller(const std::vector<ValuePtr>& params);
 ValuePtr display(const std::vector<ValuePtr>& params);//
 ValuePtr displayln(const std::vector<ValuePtr>& params);//
 ValuePtr error(const std::vector<ValuePtr>& params);//
@@ -31,17 +31,18 @@ ValuePtr cons(const std::vector<ValuePtr>& params);
 ValuePtr length(const std::vector<ValuePtr>& params);
 ValuePtr list(const std::vector<ValuePtr>& params);
 //ValuePtr map(const std::vector<ValuePtr>& params);
-ValuePtr filter(const std::vector<ValuePtr>& params);
+//ValuePtr filter(const std::vector<ValuePtr>& params);
 ValuePtr reduce(const std::vector<ValuePtr>& params);
 ValuePtr divide(const std::vector<ValuePtr>& params);
-ValuePtr abs(const std::vector<ValuePtr>& params);
+ValuePtr Abs(const std::vector<ValuePtr>& params);
 ValuePtr expt(const std::vector<ValuePtr>& params);
 ValuePtr quotient(const std::vector<ValuePtr>& params);
 ValuePtr modulo(const std::vector<ValuePtr>& params);
 ValuePtr remainder(const std::vector<ValuePtr>& params);
-ValuePtr eq(const std::vector<ValuePtr>& params);
-ValuePtr equal(const std::vector<ValuePtr>& params);
-ValuePtr notVal(const std::vector<ValuePtr>& params);
+ValuePtr ifEq(const std::vector<ValuePtr>& params);
+ValuePtr ifEqual(const std::vector<ValuePtr>& params);
+//ValuePtr notVal(const std::vector<ValuePtr>& params);
+ValuePtr EEqual(const std::vector<ValuePtr>& params);
 ValuePtr ge(const std::vector<ValuePtr>& params);
 ValuePtr le(const std::vector<ValuePtr>& params);
 ValuePtr ifEven(const std::vector<ValuePtr>& params);

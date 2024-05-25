@@ -1,7 +1,9 @@
 #include "./builtins.h"
 #include "./error.h"
 #include "./eval_env.h"
-#include<iostream>
+#include <iostream>
+#include <cmath>
+#include <math.h>
 ValuePtr add(const std::vector<ValuePtr>& params){
   double result=0;
   for (const auto& i:params)
@@ -14,6 +16,12 @@ ValuePtr add(const std::vector<ValuePtr>& params){
 }
 ValuePtr minor(const std::vector<ValuePtr>& params){
   double result=0;
+  if(params.size()==1)
+  {
+    if(!params[0]->isNumeric())
+      throw LispError("Cannot add a non-numeric value.");
+    return std::make_shared<NumericValue>(-params[0]->asNumber()) ;
+  }
   for (int i{0};i!=params.size();i++)
   {
     if(!params[i]->isNumeric())
@@ -22,6 +30,26 @@ ValuePtr minor(const std::vector<ValuePtr>& params){
     result-=params[i]->asNumber();
     else result=params[i]->asNumber();
   }return std::make_shared<NumericValue>(result);
+}
+ValuePtr divide(const std::vector<ValuePtr>& params)
+{
+  if(params.size()==1)
+  {
+     if(!params[0]->isNumeric())
+      throw LispError("Cannot add a non-numeric value.");
+     if(params[0]->asNumber()==0)
+      throw LispError("0");
+     return std::make_shared<NumericValue>(1/params[0]->asNumber());
+  }
+  if(params.size()==2)
+  {
+     if(!(params[0]->isNumeric()&&params[1]->isNumeric()))
+      throw LispError("Cannot add a non-numeric value.");
+     if(params[1]->asNumber()==0)
+      throw LispError("0");
+     return std::make_shared<NumericValue>(params[0]->asNumber()/params[1]->asNumber());
+  }
+  throw LispError("wrongSize");
 }
 ValuePtr print(const std::vector<ValuePtr>& params)
 {
@@ -220,4 +248,113 @@ ValuePtr list(const std::vector<ValuePtr>& params)
   result=std::make_shared<PairValue>(params[i],result);
   return result;
 }
+ValuePtr Abs(const std::vector<ValuePtr>& params)
+{  if(params.size()!=1) throw LispError("wrongSize");
+   if(!params[0]->isNumeric())
+      throw LispError("Not a non-numeric value.");
+   int sig=(params[0]->asNumber()>=0)?1:-1;
+   return std::make_shared<NumericValue>(sig*params[0]->asNumber());
+}
+ValuePtr expt(const std::vector<ValuePtr>& params)
+{
+  if(params.size()!=2) throw LispError("wrongSize");
+   if(!params[0]->isNumeric())
+      throw LispError("Not a non-numeric value.");
+   if(!params[1]->isNumeric())
+      throw LispError("Not a non-numeric value.");
+  double x=params[0]->asNumber();
+  double y=params[1]->asNumber();
+  if (x==0&&y==0) throw LispError("UnDefined");
+  return std::make_shared<NumericValue>(pow(x,y));
+}
+ValuePtr quotient(const std::vector<ValuePtr>& params)
+{ if(params.size()!=2) throw LispError("wrongSize");
+  if(!(params[0]->isNumeric()&&params[1]->isNumeric()))
+      throw LispError("Cannot add a non-numeric value.");
+  if(params[1]->asNumber()==0)
+      throw LispError("0");
+  return std::make_shared<NumericValue>(round(params[0]->asNumber()/params[1]->asNumber()));
+}
+ValuePtr modulo(const std::vector<ValuePtr>& params)
+{
+   if(params.size()!=2) throw LispError("wrongSize");
+   if(!(params[0]->isNumeric()&&params[1]->isNumeric()))
+      throw LispError("Cannot add a non-numeric value.");
+  if(params[1]->asNumber()==0)
+      throw LispError("0");
+  double ans=static_cast<int>(params[0]->asNumber())%static_cast<int>(params[1]->asNumber());
+  if(ans*static_cast<int>(params[1]->asNumber())>=0 )return std::make_shared<NumericValue>(ans);
+  else return std::make_shared<NumericValue>(ans+params[1]->asNumber());
+  
+}
+ValuePtr remainder(const std::vector<ValuePtr>& params)
+{
+   if(params.size()!=2) throw LispError("wrongSize");
+   if(!(params[0]->isNumeric()&&params[1]->isNumeric()))
+      throw LispError("Cannot add a non-numeric value.");
+  if(params[1]->asNumber()==0)
+      throw LispError("0");
+  double ans=static_cast<int>(params[0]->asNumber())%static_cast<int>(params[1]->asNumber());
+  return std::make_shared<NumericValue>(ans);
+}
+ValuePtr ifEq(const std::vector<ValuePtr>& params)
+{
+  if(params.size()!=2) throw LispError("wrongSize");
+  return std::make_shared<BooleanValue>(params[0]==params[1]);
+}
+ValuePtr EEqual(const std::vector<ValuePtr>& params)
+{
+  if(params.size()!=2) throw LispError("wrongSize");
+  if(!(params[0]->isNumeric()&&params[1]->isNumeric()))
+      throw LispError("Cannot add a non-numeric value.");
+  return std::make_shared<BooleanValue>(params[0]->asNumber()==params[1]->asNumber());
+}
 
+ValuePtr ge(const std::vector<ValuePtr>& params)
+{
+  if(params.size()!=2) throw LispError("wrongSize");
+  if(!(params[0]->isNumeric()&&params[1]->isNumeric()))
+      throw LispError("Cannot add a non-numeric value.");
+  return std::make_shared<BooleanValue>(params[0]->asNumber()>=params[1]->asNumber());
+}
+ValuePtr le(const std::vector<ValuePtr>& params)
+{
+  if(params.size()!=2) throw LispError("wrongSize");
+  if(!(params[0]->isNumeric()&&params[1]->isNumeric()))
+      throw LispError("Cannot add a non-numeric value.");
+  return std::make_shared<BooleanValue>(params[0]->asNumber()<=params[1]->asNumber());
+}
+ValuePtr smaller(const std::vector<ValuePtr>& params)
+{
+  if(params.size()!=2) throw LispError("wrongSize");
+  if(!(params[0]->isNumeric()&&params[1]->isNumeric()))
+      throw LispError("Not a non-numeric value.");
+  return std::make_shared<BooleanValue>(params[0]->asNumber()<params[1]->asNumber());
+}
+
+ValuePtr ifEven(const std::vector<ValuePtr>& params)
+{ 
+  if(params.size()!=1) throw LispError("wrongSize");
+  if(!(params[0]->isNumeric()))
+      throw LispError("Not a non-numeric value.");
+  if(static_cast<int>(params[0]->asNumber())!=params[0]->asNumber()) 
+      throw LispError("Not int");
+    return std::make_shared<BooleanValue>(static_cast<int>(params[0]->asNumber())%2==0);
+}
+ValuePtr ifOdd(const std::vector<ValuePtr>& params)
+{
+  if(params.size()!=1) throw LispError("wrongSize");
+  if(!(params[0]->isNumeric()))
+      throw LispError("Not a non-numeric value.");
+  if(static_cast<int>(params[0]->asNumber())!=params[0]->asNumber()) 
+      throw LispError("Not int");
+    return std::make_shared<BooleanValue>(!static_cast<int>(params[0]->asNumber())%2==0);
+}
+
+ValuePtr ifZero(const std::vector<ValuePtr>& params)
+{
+  if(params.size()!=1) throw LispError("wrongSize");
+  if(!(params[0]->isNumeric()))
+  throw LispError("Not a non-numeric value.");
+  return std::make_shared<BooleanValue>(params[0]->asNumber()==0);
+}

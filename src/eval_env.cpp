@@ -30,6 +30,42 @@ EvalEnv::EvalEnv(){
        result.push_back(this->apply(params[0],tmp));
     }
     return list(result);
+  }; 
+  std::function<BuiltinFuncType> Filter=[this](const std::vector<ValuePtr>& params){
+   if (params.size()!=2) throw LispError("SizeError");
+   std::vector<ValuePtr> result{};
+    for(auto a:params[1]->toVector())
+    {  
+       std::vector<ValuePtr> tmp{a};
+       auto ans=this->apply(params[0],tmp);
+       
+       if(typeid(*ans)==typeid(BooleanValue))
+       {
+        if(ans->toString()=="#t")
+        result.push_back(a);}
+       
+    }
+    return list(result);
+  };
+   std::function<BuiltinFuncType> Reduce=[this](const std::vector<ValuePtr>& params){
+    if (params.size()!=2) throw LispError("SizeError");
+    if (typeid(*params[1])==typeid(NilValue)) throw LispError("Empty!");
+    std::vector<ValuePtr> vec=params[1]->toVector();
+   // if(vec.size()==1)return vec[0];else 
+    for(int i{vec.size()-2};i>=0;i--)
+    {
+      std::vector<ValuePtr>tmp{vec[i],vec[i+1]};
+      vec[i]=this->apply(params[0],tmp);
+    }
+    return vec[0];
+   };
+  std::function<BuiltinFuncType> NotVal=[this](const std::vector<ValuePtr>& params){
+   if (params.size()!=1) throw LispError("SizeError");
+   auto ans=this->eval(params[0]);
+   if(typeid(*ans)==typeid(BooleanValue))
+        if(ans->toString()=="#f")
+          return std::make_shared<BooleanValue>(true);
+    return std::make_shared<BooleanValue>(false);
   };
   SymbolMap["eval"]=std::make_shared<BuiltinProcValue>(Eval); 
   SymbolMap["apply"]=std::make_shared<BuiltinProcValue>(Apply);
@@ -37,7 +73,12 @@ EvalEnv::EvalEnv(){
   SymbolMap["print"]=std::make_shared<BuiltinProcValue>(&print);
   SymbolMap["*"]=std::make_shared<BuiltinProcValue>(&times);
   SymbolMap[">"]=std::make_shared<BuiltinProcValue>(&greater);
+  SymbolMap["<"]=std::make_shared<BuiltinProcValue>(&smaller);
+  SymbolMap[">="]=std::make_shared<BuiltinProcValue>(&ge);
+  SymbolMap["<="]=std::make_shared<BuiltinProcValue>(&le);
+  SymbolMap["="]=std::make_shared<BuiltinProcValue>(&EEqual);
   SymbolMap["-"]=std::make_shared<BuiltinProcValue>(&minor);
+  SymbolMap["/"]=std::make_shared<BuiltinProcValue>(&divide);
   SymbolMap["display"]=std::make_shared<BuiltinProcValue>(&display);
   SymbolMap["displayln"]=std::make_shared<BuiltinProcValue>(&displayln);
   SymbolMap["error"]=std::make_shared<BuiltinProcValue>(&error);
@@ -60,6 +101,18 @@ EvalEnv::EvalEnv(){
   SymbolMap["length"]=std::make_shared<BuiltinProcValue>(&length);
   SymbolMap["list"]=std::make_shared<BuiltinProcValue>(&list);
   SymbolMap["map"]=std::make_shared<BuiltinProcValue>(Map);
+  SymbolMap["filter"]=std::make_shared<BuiltinProcValue>(Filter);
+  SymbolMap["reduce"]=std::make_shared<BuiltinProcValue>(Reduce);
+  SymbolMap["abs"]=std::make_shared<BuiltinProcValue>(&Abs);
+  SymbolMap["expt"]=std::make_shared<BuiltinProcValue>(&expt);
+  SymbolMap["quotient"]=std::make_shared<BuiltinProcValue>(&quotient);
+  SymbolMap["modulo"]=std::make_shared<BuiltinProcValue>(&modulo);
+  SymbolMap["remainder"]=std::make_shared<BuiltinProcValue>(&remainder);
+  SymbolMap["eq?"]=std::make_shared<BuiltinProcValue>(&ifEq);
+  SymbolMap["not"]=std::make_shared<BuiltinProcValue>(NotVal);
+  SymbolMap["even?"]==std::make_shared<BuiltinProcValue>(&ifEven);
+  SymbolMap["odd?"]==std::make_shared<BuiltinProcValue>(&ifOdd);
+  SymbolMap["zero?"]==std::make_shared<BuiltinProcValue>(&ifZero);
 }
 
 void EvalEnv::Push_Back(std::string str,ValuePtr valueptr){
@@ -94,10 +147,8 @@ ValuePtr EvalEnv::eval(ValuePtr expr){
         std::vector<ValuePtr> args=evalList(expr->toBack());
        
         {
-          auto tesult =this->apply(proc, args);
-          std::cout<<tesult->isNil();
           
-        return tesult;}
+        return this->apply(proc, args);}
       }}
    else{
      ValuePtr proc=this->eval(expr->toHead());
