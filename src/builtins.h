@@ -30,7 +30,7 @@ ValuePtr Rcdr(const std::vector<ValuePtr>& params);
 ValuePtr cons(const std::vector<ValuePtr>& params);
 ValuePtr length(const std::vector<ValuePtr>& params);
 ValuePtr list(const std::vector<ValuePtr>& params);
-ValuePtr map(const std::vector<ValuePtr>& params);
+//ValuePtr map(const std::vector<ValuePtr>& params);
 ValuePtr filter(const std::vector<ValuePtr>& params);
 ValuePtr reduce(const std::vector<ValuePtr>& params);
 ValuePtr divide(const std::vector<ValuePtr>& params);

@@ -10,29 +10,29 @@
 EvalEnv::EvalEnv(){
  
   std::function<BuiltinFuncType> Apply=[this](const std::vector<ValuePtr>& params){
-      std::cout<<"Apply"<<std::endl;
+      //std::cout<<"Apply"<<std::endl;
       if (params.size()!=2) throw LispError("SizeError");
-      ValuePtr  proc=params[0];
-      std::vector<ValuePtr> args(params[1]->toVector());
-      return this->apply(proc,args);
+     // ValuePtr  proc=params[0];
+     // std::vector<ValuePtr> args(params[1]->toVector());
+      return this->apply(params[0],params[1]->toVector());
   } ;
-  std::vector<ValuePtr>P{std::make_shared<BuiltinProcValue>(&add),std::make_shared<PairValue>(std::make_shared<NumericValue>(1),std::make_shared<NilValue>())};
-  //BuiltinFuncType applyFunc = reinterpret_cast<BuiltinFuncType>(Apply);
- // auto tmp=std::make_shared<BuiltinProcValue>(&applyFunc);
-  std::cout<<Apply(P)->toString()<<std::endl;
-  if(Apply.target<BuiltinFuncType>()==nullptr) std::cout<<"nullptr"<<std::endl;
-  else std::cout<<"nonempty"<<std::endl;
-  //SymbolMap["apply"]=tmp;
-  //std::cout<<typeid(BuiltinFuncType*).name()<<std::endl;
-  //std::cout<<typeid(std::function<BuiltinFuncType>).name()<<std::endl;
-  
-  //BuiltinFuncType* applyFunc = Apply.target<BuiltinFuncType>();
  
   std::function<BuiltinFuncType> Eval=[this](const std::vector<ValuePtr>& params){
      
-      return this->eval(params[0]);
+     return this->eval(params[0]);
   };
- // SymbolMap["eval"]=std::make_shared<BuiltinProcValue>(Eval.target<BuiltinFuncType>()); 
+  std::function<BuiltinFuncType> Map=[this](const std::vector<ValuePtr>& params){
+    if (params.size()!=2) throw LispError("SizeError");
+    std::vector<ValuePtr> result;
+    for(auto a:params[1]->toVector())
+    {
+       std::vector<ValuePtr> tmp{a};
+       result.push_back(this->apply(params[0],tmp));
+    }
+    return list(result);
+  };
+  SymbolMap["eval"]=std::make_shared<BuiltinProcValue>(Eval); 
+  SymbolMap["apply"]=std::make_shared<BuiltinProcValue>(Apply);
   SymbolMap["+"]=std::make_shared<BuiltinProcValue>(&add);
   SymbolMap["print"]=std::make_shared<BuiltinProcValue>(&print);
   SymbolMap["*"]=std::make_shared<BuiltinProcValue>(&times);
@@ -59,7 +59,7 @@ EvalEnv::EvalEnv(){
   SymbolMap["append"]=std::make_shared<BuiltinProcValue>(&append);
   SymbolMap["length"]=std::make_shared<BuiltinProcValue>(&length);
   SymbolMap["list"]=std::make_shared<BuiltinProcValue>(&list);
- // SymbolMap["displayln"]==std::make_shared<BuiltinProcValue>(&displayln);
+  SymbolMap["map"]=std::make_shared<BuiltinProcValue>(Map);
 }
 
 void EvalEnv::Push_Back(std::string str,ValuePtr valueptr){

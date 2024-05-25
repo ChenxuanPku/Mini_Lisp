@@ -92,7 +92,7 @@ std::optional<std::string> Value::asSymbol(){
 std::optional<std::string> SymbolValue::asSymbol(){
   return symbolValue;
 }
-BuiltinProcValue::BuiltinProcValue(BuiltinFuncType* func):func(func){
+BuiltinProcValue::BuiltinProcValue(std::function<BuiltinFuncType> func):func(func){
   
 }
 
@@ -109,7 +109,7 @@ double NumericValue::asNumber()
   return numericValue;
 }
 
-BuiltinFuncType* BuiltinProcValue::asfunc()
+std::function<BuiltinFuncType> BuiltinProcValue::asfunc()
 {
   if (func==nullptr)throw LispError("emptyPtr");
   //std::cout<<"func"<<std::endl;

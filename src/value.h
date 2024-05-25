@@ -5,7 +5,7 @@
 #include<memory>
 #include<vector>
 #include"./token.h"
-
+#include<functional>
 
 class Value{
 public:
@@ -80,12 +80,12 @@ public:
 
 using BuiltinFuncType = ValuePtr(const std::vector<ValuePtr>&);
 class BuiltinProcValue : public Value{
-  BuiltinFuncType* func{nullptr};
+  std::function<BuiltinFuncType> func{nullptr};
 public:
   BuiltinProcValue()=default;
-  BuiltinProcValue(BuiltinFuncType* func);
+  BuiltinProcValue(std::function<BuiltinFuncType> func);
   std::string toString() ;
-  BuiltinFuncType* asfunc();
+  std::function<BuiltinFuncType> asfunc();
 };
 class EvalEnv;
 class LambdaValue :public Value{
