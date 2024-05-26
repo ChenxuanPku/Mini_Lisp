@@ -300,7 +300,20 @@ ValuePtr remainder(const std::vector<ValuePtr>& params)
 ValuePtr ifEq(const std::vector<ValuePtr>& params)
 {
   if(params.size()!=2) throw LispError("wrongSize");
-  return std::make_shared<BooleanValue>(params[0]==params[1]);
+  if(typeid(*params[0])!=typeid(*params[1]))
+    return std::make_shared<BooleanValue>(false);
+  if(params[0]->isPair()||params[0]->toString()=="#<procedure>"||params[0]->isString())
+    return std::make_shared<BooleanValue>(params[0]==params[1]);
+  else return std::make_shared<BooleanValue>(params[0]->toString()==params[1]->toString());
+}
+ValuePtr ifEqual(const std::vector<ValuePtr>& params)
+{
+  if(params.size()!=2) throw LispError("wrongSize");
+  if(params[0]->toString()=="#<procedure>"&&params[0]->toString()=="#<procedure>")
+  {
+    return std::make_shared<BooleanValue>(params[0]==params[1]);
+  }
+  else return std::make_shared<BooleanValue>(params[0]->toString()==params[1]->toString());
 }
 ValuePtr EEqual(const std::vector<ValuePtr>& params)
 {
@@ -339,7 +352,9 @@ ValuePtr ifEven(const std::vector<ValuePtr>& params)
       throw LispError("Not a non-numeric value.");
   if(static_cast<int>(params[0]->asNumber())!=params[0]->asNumber()) 
       throw LispError("Not int");
-    return std::make_shared<BooleanValue>(static_cast<int>(params[0]->asNumber())%2==0);
+  if(static_cast<int>(params[0]->asNumber())%2==0)
+    return std::make_shared<BooleanValue>(true);
+    return std::make_shared<BooleanValue>(false);
 }
 ValuePtr ifOdd(const std::vector<ValuePtr>& params)
 {
@@ -348,14 +363,18 @@ ValuePtr ifOdd(const std::vector<ValuePtr>& params)
       throw LispError("Not a non-numeric value.");
   if(static_cast<int>(params[0]->asNumber())!=params[0]->asNumber()) 
       throw LispError("Not int");
-    return std::make_shared<BooleanValue>(!static_cast<int>(params[0]->asNumber())%2==0);
+    if(static_cast<int>(params[0]->asNumber())%2==0)
+    return std::make_shared<BooleanValue>(false);
+    return std::make_shared<BooleanValue>(true);
 }
 
 ValuePtr ifZero(const std::vector<ValuePtr>& params)
 {
-  std::cout<<"zero?\n";
   if(params.size()!=1) throw LispError("wrongSize");
   if(params[0]->isNumeric())
-  return std::make_shared<BooleanValue>(params[0]->asNumber()==0);
+  { if(params[0]->asNumber()!=0)
+    return std::make_shared<BooleanValue>(false);
+    return std::make_shared<BooleanValue>(true);}
   else throw LispError("Not int");
 }
+

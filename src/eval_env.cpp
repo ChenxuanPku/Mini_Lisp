@@ -61,12 +61,14 @@ EvalEnv::EvalEnv(){
    };
   std::function<BuiltinFuncType> NotVal=[this](const std::vector<ValuePtr>& params){
    if (params.size()!=1) throw LispError("SizeError");
-   auto ans=this->eval(params[0]);
-   if(typeid(*ans)==typeid(BooleanValue))
-        if(ans->toString()=="#f")
+   //auto ans=this->eval(params[0]);
+   if(typeid(*params[0])==typeid(BooleanValue))
+        if(params[0]->toString()=="#f")
           return std::make_shared<BooleanValue>(true);
     return std::make_shared<BooleanValue>(false);
   };
+  
+
   SymbolMap["eval"]=std::make_shared<BuiltinProcValue>(Eval); 
   SymbolMap["apply"]=std::make_shared<BuiltinProcValue>(Apply);
   SymbolMap["+"]=std::make_shared<BuiltinProcValue>(&add);
@@ -109,20 +111,21 @@ EvalEnv::EvalEnv(){
   SymbolMap["modulo"]=std::make_shared<BuiltinProcValue>(&modulo);
   SymbolMap["remainder"]=std::make_shared<BuiltinProcValue>(&remainder);
   SymbolMap["eq?"]=std::make_shared<BuiltinProcValue>(&ifEq);
+  SymbolMap["equal?"]=std::make_shared<BuiltinProcValue>(&ifEqual);
   SymbolMap["not"]=std::make_shared<BuiltinProcValue>(NotVal);
-  SymbolMap["even?"]==std::make_shared<BuiltinProcValue>(&ifEven);
-  SymbolMap["odd?"]==std::make_shared<BuiltinProcValue>(&ifOdd);
-  SymbolMap["zero?"]==std::make_shared<BuiltinProcValue>(&ifZero);
+  SymbolMap["even?"]=std::make_shared<BuiltinProcValue>(&ifEven);
+  SymbolMap["odd?"]=std::make_shared<BuiltinProcValue>(&ifOdd);
+  SymbolMap["zero?"]=std::make_shared<BuiltinProcValue>(&ifZero);
 }
 
 void EvalEnv::Push_Back(std::string str,ValuePtr valueptr){
   SymbolMap[str]=valueptr;
 }
 ValuePtr EvalEnv::eval(ValuePtr expr){
-  
+
   if(expr->isSymbol()){ 
   if (auto name=expr->asSymbol())
-  {
+  { 
     return lookupBinding(*name);
   }}
   if(expr->isBoolean()||expr->isNumeric()||expr->isString())

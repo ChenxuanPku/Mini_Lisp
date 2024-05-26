@@ -24,6 +24,9 @@ ValuePtr ifPair(const std::vector<ValuePtr>& params);//
 ValuePtr ifProcedure(const std::vector<ValuePtr>& params);//
 ValuePtr ifString(const std::vector<ValuePtr>& params);//
 ValuePtr ifSymbol(const std::vector<ValuePtr>& params);//
+ValuePtr ifEven(const std::vector<ValuePtr>& params);
+ValuePtr ifOdd(const std::vector<ValuePtr>& params);
+ValuePtr ifZero(const std::vector<ValuePtr>& params);
 ValuePtr append(const std::vector<ValuePtr>& params);//list
 ValuePtr Rcar(const std::vector<ValuePtr>& params);
 ValuePtr Rcdr(const std::vector<ValuePtr>& params);
@@ -45,7 +48,5 @@ ValuePtr ifEqual(const std::vector<ValuePtr>& params);
 ValuePtr EEqual(const std::vector<ValuePtr>& params);
 ValuePtr ge(const std::vector<ValuePtr>& params);
 ValuePtr le(const std::vector<ValuePtr>& params);
-ValuePtr ifEven(const std::vector<ValuePtr>& params);
-ValuePtr ifOdd(const std::vector<ValuePtr>& params);
-ValuePtr ifZero(const std::vector<ValuePtr>& params);
+
 #endif
