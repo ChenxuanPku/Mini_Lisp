@@ -54,7 +54,7 @@ void  REPL()
 void FileMode(const char* filename)
 {   
     
-    std::cout<<"filemode Begin "<<filename<<std::endl;
+   
     std::shared_ptr<EvalEnv> env = EvalEnv::createGlobal();
     std::string line;
     std::string result;
@@ -62,23 +62,24 @@ void FileMode(const char* filename)
     int num{0};
     while(std::getline(inputFile,line))
     {   
-        std::cout<<num++<<std::endl;
+        
         if (line.empty()) {
             continue;
-        }
-        if (!result.empty()) {
-                result.erase(result.length() - 1);  
         }
         result += line;
         if(CheckParen(result))
         {  
-            std::cout<<"balanced"<<std::endl;
-           auto tokens = Tokenizer::tokenize(line);
+           if(!result.empty())
+           {
+            auto tokens = Tokenizer::tokenize(result);
             Parser parser(std::move(tokens)); 
             auto value = parser.parse();
             auto Result = env->eval(std::move(value));
-           result.clear();
-        }else std::cout<<"unbalanced"<<std::endl;
+           result.clear();}
+        }if (!result.empty()) {
+                result[result.length() - 1]=' ';  
+        }
+        
 
     }
     
@@ -99,7 +100,7 @@ int main(int argc, char** argv) {
     else throw SyntaxError("wrong mode");
     }catch (std::runtime_error& e) {
             std::cerr << "Error: " << e.what() << std::endl;}
-    std::cout<<"done"<<std::endl;
+   
     return 0;
 }
 

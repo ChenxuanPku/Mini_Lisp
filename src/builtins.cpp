@@ -86,7 +86,6 @@ ValuePtr display(const std::vector<ValuePtr>& params){
   {
     
       std::cout<<i->toString();
-    
   }
   return std::make_shared<NilValue>();
 }
@@ -95,7 +94,6 @@ ValuePtr displayln(const std::vector<ValuePtr>& params){
   if (params.size()!=1) throw LispError("No");
   for (auto i:params)
   {
-    
       std::cout<<i->toString()<<std::endl;
   }
   return std::make_shared<NilValue>();
