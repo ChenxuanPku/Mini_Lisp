@@ -1,5 +1,6 @@
 #include <iostream>
 #include <string>
+#include <fstream>
 #include "./error.h"
 #include "./tokenizer.h"
 #include "./value.h"
@@ -18,6 +19,17 @@ struct TestCtx {
         return result->toString();
     }
 };
+bool CheckParen(const std::string& line) {
+    int count = 0;
+    for (char c : line) {
+        if (c == '(') {
+            count++;
+        } else if (c == ')') {
+            count--;
+        }
+    }
+    return count == 0;
+}
 void  REPL()
 {
     std::shared_ptr<EvalEnv> env = EvalEnv::createGlobal();
@@ -41,23 +53,47 @@ void  REPL()
 }
 void FileMode(const char* filename)
 {
+    std::shared_ptr<EvalEnv> env = EvalEnv::createGlobal();
+    std::string line;
+    std::string result;
+    std::ifstream inputFile(filename);
+    while(std::getline(inputFile,line))
+    {
+        if (line.empty()) {
+            continue;
+        }
+        if (!result.empty()) {
+                result.erase(result.length() - 1);  
+        }
+        result += line;
+        if(CheckParen(result))
+        {
+           auto tokens = Tokenizer::tokenize(line);
+            Parser parser(std::move(tokens)); 
+            auto value = parser.parse();
+            auto Result = env->eval(std::move(value));
+           result.clear();
+        }
+
+    }
 
 }
 int main(int argc, char** argv) {
+    
      // RJSJ_TEST(TestCtx, Lv2, Lv3, Lv4, Lv5, Lv5Extra, Lv6, Lv7, Lv7Lib, Sicp);
    try { if (argc==2)
     {
-       if (argv[1]=="-r") REPL();
+       if (strcmp(argv[1],"-r")==0) REPL();
        else throw SyntaxError("wrong mode");
     }
     else if(argc==3)
     {
-      if (argv[1]=="-f") FileMode(argv[2]);
+      if (strcmp(argv[1],"-f")==0) FileMode(argv[2]);
       else throw SyntaxError("wrong mode");
     }
     else throw SyntaxError("wrong mode");
     }catch (std::runtime_error& e) {
             std::cerr << "Error: " << e.what() << std::endl;}
-    return;
+    return 0;
 }
 
