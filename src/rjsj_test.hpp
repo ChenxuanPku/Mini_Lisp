@@ -10,7 +10,7 @@
 
 // Comment below line if you want to manually control do testing or not.
 #define RJSJ_TEST_ENABLED 1
-
+#define RJSJ_TEST_NO_EXIT 
 #include <cmath>
 #if __has_include(<concepts>)
 #include <concepts>

@@ -9,7 +9,7 @@ ValuePtr add(const std::vector<ValuePtr>& params){
   for (const auto& i:params)
   {
     if(!i->isNumeric())
-      throw LispError("Cannot add a non-numeric value.");
+      throw LispError("TypeError, should be a numeric value.");
     result+=i->asNumber();
     
   }return std::make_shared<NumericValue>(result);
@@ -19,13 +19,13 @@ ValuePtr minor(const std::vector<ValuePtr>& params){
   if(params.size()==1)
   {
     if(!params[0]->isNumeric())
-      throw LispError("Cannot add a non-numeric value.");
+      throw LispError("TypeError, should be a numeric value.");
     return std::make_shared<NumericValue>(-params[0]->asNumber()) ;
   }
   for (int i{0};i!=params.size();i++)
   {
     if(!params[i]->isNumeric())
-      throw LispError("Cannot add a non-numeric value.");
+      throw LispError("TypeError, should be a numeric value.");
     if(i!=0)
     result-=params[i]->asNumber();
     else result=params[i]->asNumber();
@@ -36,20 +36,20 @@ ValuePtr divide(const std::vector<ValuePtr>& params)
   if(params.size()==1)
   {
      if(!params[0]->isNumeric())
-      throw LispError("Cannot add a non-numeric value.");
+      throw LispError("TypeError, should be a numeric value.");
      if(params[0]->asNumber()==0)
-      throw LispError("0");
+      throw LispError("0 cannot be the denominator");
      return std::make_shared<NumericValue>(1/params[0]->asNumber());
   }
   if(params.size()==2)
   {
      if(!(params[0]->isNumeric()&&params[1]->isNumeric()))
-      throw LispError("Cannot add a non-numeric value.");
+      throw LispError("TypeError, should be a numeric value.");
      if(params[1]->asNumber()==0)
-      throw LispError("0");
+      throw LispError("0 cannot be the denominator");
      return std::make_shared<NumericValue>(params[0]->asNumber()/params[1]->asNumber());
   }
-  throw LispError("wrongSize");
+  throw LispError("The number of parameters provided does not meet the requirements.");
 }
 ValuePtr print(const std::vector<ValuePtr>& params)
 {
@@ -66,22 +66,22 @@ ValuePtr times(const std::vector<ValuePtr>& params){
   {
     if (i->isNumeric())
       result*=i->asNumber();
-    else throw LispError("NotNumerical");
+    else throw LispError("TypeError, should be a numeric value.");
   }
   return std::make_shared<NumericValue>(result);
 }
 ValuePtr greater(const std::vector<ValuePtr>& params){
   if (params.size()!=2)
-    throw LispError("not Two to compare");
+    throw LispError("The number of parameters provided does not meet the requirements.");
   if(params[0]->isNumeric()&&params[0]->isNumeric())
   {
     return std::make_shared<BooleanValue>(params[0]->asNumber()>params[1]->asNumber());
   }
-  else throw LispError("notNumerical");
+  else throw LispError("TypeError, should be a numeric value.");
 }
 
 ValuePtr display(const std::vector<ValuePtr>& params){
-  if (params.size()!=1) throw LispError("No");
+  if (params.size()!=1) throw LispError("The number of parameters provided does not meet the requirements.");
   for (auto i:params)
   {
     
@@ -91,7 +91,7 @@ ValuePtr display(const std::vector<ValuePtr>& params){
 }
 
 ValuePtr displayln(const std::vector<ValuePtr>& params){
-  if (params.size()!=1) throw LispError("No");
+  if (params.size()!=1) throw LispError("The number of parameters provided does not meet the requirements.");
   for (auto i:params)
   {
       std::cout<<i->toString()<<std::endl;
@@ -115,21 +115,21 @@ ValuePtr newline(const std::vector<ValuePtr>& params)
 }
 ValuePtr ifAtom(const std::vector<ValuePtr>& params)
 {
-  if(params.size()!=1) throw LispError("wrongSize");
+  if(params.size()!=1) throw LispError("The number of parameters provided does not meet the requirements.");
   if(params[0]->isBoolean()||params[0]->isNumeric()||params[0]->isNil()||params[0]->isSymbol()||params[0]->isString())
   return std::make_shared<BooleanValue>(true);
   else return std::make_shared<BooleanValue>(false);
 }
 ValuePtr ifBoolean(const std::vector<ValuePtr>& params)
 {
-  if(params.size()!=1) throw LispError("wrongSize");
+  if(params.size()!=1) throw LispError("The number of parameters provided does not meet the requirements.");
   if(params[0]->isBoolean())
   return std::make_shared<BooleanValue>(true);
   else return std::make_shared<BooleanValue>(false);
 }
 ValuePtr ifInteger(const std::vector<ValuePtr>& params)
 {
-  if(params.size()!=1) throw LispError("wrongSize");
+  if(params.size()!=1) throw LispError("The number of parameters provided does not meet the requirements.");
   if(params[0]->isNumeric())
   { int integer=(params[0]->asNumber());
   if(integer==params[0]->asNumber())
@@ -139,7 +139,7 @@ ValuePtr ifInteger(const std::vector<ValuePtr>& params)
 
 ValuePtr ifNumber(const std::vector<ValuePtr>& params)
 {
-  if(params.size()!=1) throw LispError("wrongSize");
+  if(params.size()!=1) throw LispError("The number of parameters provided does not meet the requirements.");
   if(params[0]->isNumeric())
   return std::make_shared<BooleanValue>(true);
   else return std::make_shared<BooleanValue>(false);
@@ -155,14 +155,14 @@ ValuePtr ifNull(const std::vector<ValuePtr>& params)
 }
 ValuePtr ifPair(const std::vector<ValuePtr>& params)
 {
-  if(params.size()!=1) throw LispError("wrongSize");
+  if(params.size()!=1) throw LispError("The number of parameters provided does not meet the requirements.");
   if(params[0]->isPair())
   return std::make_shared<BooleanValue>(true);
   else return std::make_shared<BooleanValue>(false);
 }
 ValuePtr ifProcedure(const std::vector<ValuePtr>& params)
 {
-  if(params.size()!=1) throw LispError("wrongSize");
+  if(params.size()!=1) throw LispError("The number of parameters provided does not meet the requirements.");
   if(params[0]->toString()=="#<procedure>")
   return std::make_shared<BooleanValue>(true);
   else return std::make_shared<BooleanValue>(false);
