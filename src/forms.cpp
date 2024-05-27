@@ -1,9 +1,11 @@
 #include "./forms.h"
 #include "./error.h"
+
 #include <iostream>
 const std::unordered_map<std::string, SpecialFormType*> SPECIAL_FORMS{
     {"define", defineForm},{"quote",quoteForm},{"if",ifForm},{"and",andForm},{"or",orForm}
-    ,{"lambda",lambdaForm}
+    ,{"lambda",lambdaForm},{"cond",condForm},{"begin",beginForm},{"let",letForm},
+    {"quasiquote",quasiForm},{"unquote",unForm}
     };
 
 ValuePtr defineForm(const std::vector<ValuePtr>& args, EvalEnv& env) 
@@ -60,4 +62,85 @@ ValuePtr lambdaForm(const std::vector<ValuePtr>& args, EvalEnv& env) {
     for(auto i:args[0]->toVector())params.push_back(i->toString());
     std::vector<ValuePtr> body(args.begin()+1,args.end());
     return std::make_shared<LambdaValue>(params,body,env.shared_from_this());
+}
+
+ValuePtr condForm(const std::vector<ValuePtr>& args, EvalEnv& env) {
+    for(int i{0};i!= args.size();i++)
+    {
+        auto son=args[i]->toVector();
+        if(son.size()==0) throw LispError ("unDefined");
+        if(son[0]->toString()=="else"){
+            if(i!=args.size()-1)throw LispError ("unDefined");
+                for (int j{1};j!=son.size();j++)
+                {
+                    auto tmp=env.eval(son[j]);
+                    if(j==son.size()-1) return tmp;
+                }
+                 if(son.size()==1) return son[0];
+        }
+        auto result=env.eval(son[0]);
+        if (!result->isBoolean()) throw LispError (result->toString()+"unDefined");
+            if(result->toString()=="#f") continue;
+            else {
+                for (int j{1};j!=son.size();j++)
+                {
+                    auto tmp=env.eval(son[j]);
+                    if(j==son.size()-1) return tmp;
+                }
+                if(son.size()==1) return result;
+            }
+        }
+    
+    throw LispError ("unDefined");
+}
+
+ValuePtr beginForm(const std::vector<ValuePtr>& args, EvalEnv& env)
+{
+    for(int i{0};i!=args.size();i++)
+  {
+    auto result=env.eval(args[i]);
+    if(i==args.size()-1)return result;
+  }
+}
+
+ValuePtr letForm(const std::vector<ValuePtr>& args, EvalEnv& env) 
+{
+    std::vector<std::string> newArgs;
+    std::vector<ValuePtr> value;
+    std::vector<ValuePtr> process;
+    for(auto a:args[0]->toVector())
+    {
+        auto tmp=a->toVector();
+        if(tmp.size()!=2) throw LispError("unDefined");
+        newArgs.push_back(tmp[0]->toString());
+        value.push_back(tmp[1]);
+    }
+    if(args.size()<2) throw LispError("unDefined");
+    for(int i{1};i!=args.size();i++)
+      process.push_back(args[i]);
+    auto Lambda=std::make_shared<LambdaValue>(newArgs,process,env.shared_from_this());
+    return Lambda->apply(value);
+}
+ValuePtr unForm(const std::vector<ValuePtr>& args, EvalEnv& env)
+{
+    throw LispError("Error!");
+}
+ValuePtr quasiForm(const std::vector<ValuePtr>& args, EvalEnv& env) 
+{
+    std::vector<ValuePtr> result;
+    if(args.size()!=1)throw LispError("wrongSize");
+    for(auto a:args[0]->toVector())
+    {
+        if(a->isPair())
+        {  auto tmp=a->toVector();
+           if(tmp[0]->asSymbol()=="quasiquote") throw LispError("illegal!");
+           if(tmp[0]->asSymbol()=="unquote"){
+              // std::cout<<tmp[1]->toString();
+               result.push_back(env.eval(tmp[1]));
+               continue;
+           }
+        }
+        result.push_back(a);
+    }
+    return list(result);
 }
