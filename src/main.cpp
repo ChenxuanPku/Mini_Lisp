@@ -33,8 +33,8 @@ bool CheckParen(const std::string& line) {
 void  REPL()
 {
     std::shared_ptr<EvalEnv> env = EvalEnv::createGlobal();
-    while (true) {
-        try {
+    try {while (true) {
+        
             std::cout << ">>> " ;
             std::string line;
             std::string str;
@@ -52,10 +52,10 @@ void  REPL()
             auto result = env->eval(std::move(value));
             std::cout << result->toString() << std::endl;break;}
             else std::cout << "``` " ;}
-        } catch (std::runtime_error& e) {
+        
+    }} catch (std::runtime_error& e) {
             std::cerr << "Error: " << e.what() << std::endl;
         }
-    }
 }
 void FileMode(const char* filename)
 {   
