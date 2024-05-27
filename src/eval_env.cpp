@@ -11,7 +11,7 @@ EvalEnv::EvalEnv(){
  
   std::function<BuiltinFuncType> Apply=[this](const std::vector<ValuePtr>& params){
       //std::cout<<"Apply"<<std::endl;
-      if (params.size()!=2) throw LispError("SizeError");
+      if (params.size()!=2) throw LispError("The number of parameters provided does not meet the requirements.");
      // ValuePtr  proc=params[0];
      // std::vector<ValuePtr> args(params[1]->toVector());
       return this->apply(params[0],params[1]->toVector());
@@ -22,7 +22,7 @@ EvalEnv::EvalEnv(){
      return this->eval(params[0]);
   };
   std::function<BuiltinFuncType> Map=[this](const std::vector<ValuePtr>& params){
-    if (params.size()!=2) throw LispError("SizeError");
+    if (params.size()!=2) throw LispError("The number of parameters provided does not meet the requirements.");
     std::vector<ValuePtr> result;
     for(auto a:params[1]->toVector())
     {
@@ -32,7 +32,7 @@ EvalEnv::EvalEnv(){
     return list(result);
   }; 
   std::function<BuiltinFuncType> Filter=[this](const std::vector<ValuePtr>& params){
-   if (params.size()!=2) throw LispError("SizeError");
+   if (params.size()!=2) throw LispError("The number of parameters provided does not meet the requirements.");
    std::vector<ValuePtr> result{};
     for(auto a:params[1]->toVector())
     {  
@@ -48,7 +48,7 @@ EvalEnv::EvalEnv(){
     return list(result);
   };
    std::function<BuiltinFuncType> Reduce=[this](const std::vector<ValuePtr>& params){
-    if (params.size()!=2) throw LispError("SizeError");
+    if (params.size()!=2) throw LispError("The number of parameters provided does not meet the requirements.");
     if (typeid(*params[1])==typeid(NilValue)) throw LispError("Empty!");
     std::vector<ValuePtr> vec=params[1]->toVector();
    // if(vec.size()==1)return vec[0];else 
@@ -60,7 +60,7 @@ EvalEnv::EvalEnv(){
     return vec[0];
    };
   std::function<BuiltinFuncType> NotVal=[this](const std::vector<ValuePtr>& params){
-   if (params.size()!=1) throw LispError("SizeError");
+   if (params.size()!=1) throw LispError("The number of parameters provided does not meet the requirements.");
    //auto ans=this->eval(params[0]);
    if(typeid(*params[0])==typeid(BooleanValue))
         if(params[0]->toString()=="#f")
@@ -212,7 +212,7 @@ std::shared_ptr<EvalEnv> EvalEnv::createChild(const std::vector<std::string>& pa
   result->parent=this->shared_from_this();
   int size_1=params.size();
   int size_2=args.size();
-  if(size_1!=size_2) throw LispError("notMatch");
+  if(size_1!=size_2) throw LispError("The number of parameters provided does not meet the requirements.");
   for(int i{0};i!=size_1;i++)
   {
     result->Push_Back(params[i],args[i]);

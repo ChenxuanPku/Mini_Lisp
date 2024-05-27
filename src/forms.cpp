@@ -68,7 +68,7 @@ ValuePtr condForm(const std::vector<ValuePtr>& args, EvalEnv& env) {
     for(int i{0};i!= args.size();i++)
     {
         auto son=args[i]->toVector();
-        if(son.size()==0) throw LispError ("unDefined");
+        if(son.size()==0) throw LispError ("The number of parameters provided does not meet the requirements.");
         if(son[0]->toString()=="else"){
             if(i!=args.size()-1)throw LispError ("unDefined");
                 for (int j{1};j!=son.size();j++)
@@ -79,7 +79,6 @@ ValuePtr condForm(const std::vector<ValuePtr>& args, EvalEnv& env) {
                  if(son.size()==1) return son[0];
         }
         auto result=env.eval(son[0]);
-        //if (!result->isBoolean()) throw LispError (result->toString()+"unDefined");
             if(result->toString()=="#f") continue;
             else {
                 for (int j{1};j!=son.size();j++)
@@ -111,11 +110,11 @@ ValuePtr letForm(const std::vector<ValuePtr>& args, EvalEnv& env)
     for(auto a:args[0]->toVector())
     {
         auto tmp=a->toVector();
-        if(tmp.size()!=2) throw LispError("unDefined");
+        if(tmp.size()!=2) throw LispError("The number of parameters provided does not meet the requirements.");
         newArgs.push_back(tmp[0]->toString());
         value.push_back(env.eval(tmp[1]));
     }
-    if(args.size()<2) throw LispError("unDefined");
+    if(args.size()<2) throw LispError("The number of parameters provided does not meet the requirements.");
     for(int i{1};i!=args.size();i++)
       process.push_back(args[i]);
     auto Lambda=std::make_shared<LambdaValue>(newArgs,process,env.shared_from_this());
@@ -128,7 +127,7 @@ ValuePtr unForm(const std::vector<ValuePtr>& args, EvalEnv& env)
 ValuePtr quasiForm(const std::vector<ValuePtr>& args, EvalEnv& env) 
 {
     std::vector<ValuePtr> result;
-    if(args.size()!=1)throw LispError("wrongSize");
+    if(args.size()!=1)throw LispError("The number of parameters provided does not meet the requirements.");
     for(auto a:args[0]->toVector())
     {
         if(a->isPair())
