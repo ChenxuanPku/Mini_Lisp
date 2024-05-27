@@ -52,13 +52,17 @@ void  REPL()
     }
 }
 void FileMode(const char* filename)
-{
+{   
+    
+    std::cout<<"filemode Begin "<<filename<<std::endl;
     std::shared_ptr<EvalEnv> env = EvalEnv::createGlobal();
     std::string line;
     std::string result;
     std::ifstream inputFile(filename);
+    int num{0};
     while(std::getline(inputFile,line))
-    {
+    {   
+        std::cout<<num++<<std::endl;
         if (line.empty()) {
             continue;
         }
@@ -67,19 +71,20 @@ void FileMode(const char* filename)
         }
         result += line;
         if(CheckParen(result))
-        {
+        {  
+            std::cout<<"balanced"<<std::endl;
            auto tokens = Tokenizer::tokenize(line);
             Parser parser(std::move(tokens)); 
             auto value = parser.parse();
             auto Result = env->eval(std::move(value));
            result.clear();
-        }
+        }else std::cout<<"unbalanced"<<std::endl;
 
     }
-
+    
 }
 int main(int argc, char** argv) {
-    
+      
      // RJSJ_TEST(TestCtx, Lv2, Lv3, Lv4, Lv5, Lv5Extra, Lv6, Lv7, Lv7Lib, Sicp);
    try { if (argc==2)
     {
@@ -94,6 +99,7 @@ int main(int argc, char** argv) {
     else throw SyntaxError("wrong mode");
     }catch (std::runtime_error& e) {
             std::cerr << "Error: " << e.what() << std::endl;}
+    std::cout<<"done"<<std::endl;
     return 0;
 }
 
