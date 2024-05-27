@@ -1,6 +1,6 @@
 #include <iostream>
 #include <string>
-
+#include "./error.h"
 #include "./tokenizer.h"
 #include "./value.h"
 #include "./parser.h"
@@ -18,12 +18,9 @@ struct TestCtx {
         return result->toString();
     }
 };
-int main() {
-      RJSJ_TEST(TestCtx, Lv2, Lv3, Lv4, Lv5, Lv5Extra, Lv6, Lv7, Lv7Lib);
+void  REPL()
+{
     std::shared_ptr<EvalEnv> env = EvalEnv::createGlobal();
-  // auto tmp =env->lookupBinding("apply");
- //  auto Builtin{dynamic_cast<BuiltinProcValue*>(tmp.get())};
-   //std::cout<<Builtin->asfunc()<<std::endl;
     while (true) {
         try {
             std::cout << ">>> " ;
@@ -42,3 +39,25 @@ int main() {
         }
     }
 }
+void FileMode(const char* filename)
+{
+
+}
+int main(int argc, char** argv) {
+     // RJSJ_TEST(TestCtx, Lv2, Lv3, Lv4, Lv5, Lv5Extra, Lv6, Lv7, Lv7Lib, Sicp);
+   try { if (argc==2)
+    {
+       if (argv[1]=="-r") REPL();
+       else throw SyntaxError("wrong mode");
+    }
+    else if(argc==3)
+    {
+      if (argv[1]=="-f") FileMode(argv[2]);
+      else throw SyntaxError("wrong mode");
+    }
+    else throw SyntaxError("wrong mode");
+    }catch (std::runtime_error& e) {
+            std::cerr << "Error: " << e.what() << std::endl;}
+    return;
+}
+

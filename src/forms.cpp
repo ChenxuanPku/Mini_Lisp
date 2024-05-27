@@ -79,7 +79,7 @@ ValuePtr condForm(const std::vector<ValuePtr>& args, EvalEnv& env) {
                  if(son.size()==1) return son[0];
         }
         auto result=env.eval(son[0]);
-        if (!result->isBoolean()) throw LispError (result->toString()+"unDefined");
+        //if (!result->isBoolean()) throw LispError (result->toString()+"unDefined");
             if(result->toString()=="#f") continue;
             else {
                 for (int j{1};j!=son.size();j++)
@@ -113,7 +113,7 @@ ValuePtr letForm(const std::vector<ValuePtr>& args, EvalEnv& env)
         auto tmp=a->toVector();
         if(tmp.size()!=2) throw LispError("unDefined");
         newArgs.push_back(tmp[0]->toString());
-        value.push_back(tmp[1]);
+        value.push_back(env.eval(tmp[1]));
     }
     if(args.size()<2) throw LispError("unDefined");
     for(int i{1};i!=args.size();i++)
