@@ -9,16 +9,15 @@
 
 class Value{
 public:
-  virtual std::string toString(){
-  return "";
   
-} bool isBoolean();
+  bool isBoolean();
   bool isNumeric();
   bool isString();
   bool isNil();
   bool isSymbol();
   bool isPair();
   bool isBuiltin();
+  virtual std::string toString(){return "";}
   virtual std::vector<std::shared_ptr<Value>> toVector();
   virtual std::optional<std::string> asSymbol();
   virtual double asNumber();

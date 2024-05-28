@@ -86,11 +86,7 @@ void FileMode(const char* filename)
             auto value = parser.parse();
             env->eval(std::move(value));
             result.clear();}
-        }/*if (!result.empty()) {
-                result[result.length() - 1]=' ';  
-        }*/
-        
-
+        }
     }
     
 }

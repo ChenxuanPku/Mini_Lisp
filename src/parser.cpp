@@ -9,27 +9,26 @@ ValuePtr Parser::parse()
     {
         auto value = static_cast<IdentifierToken&>(*token).getName();
         tokens.pop_front();
-        return std::make_shared<SymbolValue>(value);
+        return std::make_shared<SymbolValue>(std::move(value));
     }
     if(token->getType()==TokenType::NUMERIC_LITERAL)
     {
          auto value = static_cast<NumericLiteralToken&>(*token).getValue();
          tokens.pop_front();
-        return std::make_shared<NumericValue>(value);
+        return std::make_shared<NumericValue>(std::move(value));
     }
-    else
-     if(token->getType()==TokenType::BOOLEAN_LITERAL)
+    
+    if(token->getType()==TokenType::BOOLEAN_LITERAL)
     {
          auto value = static_cast<BooleanLiteralToken&>(*token).getValue();
          tokens.pop_front();
-        return std::make_shared<BooleanValue>(value);
+        return std::make_shared<BooleanValue>(std::move(value));
     }
-    else if
-    (token->getType()==TokenType::STRING_LITERAL)
+    if(token->getType()==TokenType::STRING_LITERAL)
     {
         auto value = static_cast<StringLiteralToken&>(*token).getValue();
         tokens.pop_front();
-        return std::make_shared<StringValue>(value);
+        return std::make_shared<StringValue>(std::move(value));
     }
     else if(token->toString()=="(LEFT_PAREN)"){
         tokens.pop_front();
@@ -66,13 +65,12 @@ ValuePtr Parser::parse()
     );
     }
     else
-    {   std::cout << *token << std::endl;
-        throw SyntaxError("Unimplemented");}
+    {  throw SyntaxError("UnDefined");}
 }
 
 ValuePtr Parser::parseTails(){
    
-    if (tokens.empty()) throw SyntaxError("Empty1");
+    if (tokens.empty()) throw SyntaxError("Empty");
     if (tokens.front()->toString()=="(RIGHT_PAREN)")
     {
         tokens.pop_front();
@@ -80,17 +78,17 @@ ValuePtr Parser::parseTails(){
     }
     auto car=this->parse();
     
-    if (tokens.empty()) throw SyntaxError("Empty2");
+    if (tokens.empty()) throw SyntaxError("Empty");
     if (tokens.front()->toString()=="(DOT)")
     {
         tokens.pop_front();
-        if (tokens.empty()) throw SyntaxError("Empty3");
+        if (tokens.empty()) throw SyntaxError("Empty");
         auto cdr=this->parse();
-            return std::make_shared<PairValue>(car,cdr);
+            return std::make_shared<PairValue>(std::move(car),std::move(cdr));
     }
     else{
         auto cdr=this->parseTails();
-        return std::make_shared<PairValue>(car,cdr);
+        return std::make_shared<PairValue>(std::move(car),std::move(cdr));
     }
 
 }

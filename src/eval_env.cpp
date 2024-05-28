@@ -52,7 +52,7 @@ EvalEnv::EvalEnv(){
     if (typeid(*params[1])==typeid(NilValue)) throw LispError("Empty!");
     std::vector<ValuePtr> vec=params[1]->toVector();
    // if(vec.size()==1)return vec[0];else 
-    for(int i{vec.size()-2};i>=0;i--)
+    for(int i{vec.size()-2};i!=-1;i--)
     {
       std::vector<ValuePtr>tmp{vec[i],vec[i+1]};
       vec[i]=this->apply(params[0],tmp);
@@ -199,9 +199,6 @@ ValuePtr EvalEnv::lookupBinding(std::string str){
     return SymbolMap[str];}
    if (parent==nullptr)  throw LispError("Variable " + str + " not defined.");
    return parent->lookupBinding(str);
-}
-
-ValuePtr EvalEnv::defineBinding(){
 }
 std::shared_ptr<EvalEnv> EvalEnv::createGlobal()
 {

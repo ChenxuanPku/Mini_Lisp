@@ -11,7 +11,7 @@ const std::unordered_map<std::string, SpecialFormType*> SPECIAL_FORMS{
 ValuePtr defineForm(const std::vector<ValuePtr>& args, EvalEnv& env) 
 {
     if (auto name = args[0]->asSymbol()) {
-        env.Push_Back(*name, env.eval(args[1]));
+        env.Push_Back(*name, std::move(env.eval(args[1])));
     } else {
         if (typeid(*args[0])==typeid(PairValue))
         {
@@ -35,8 +35,8 @@ ValuePtr quoteForm(const std::vector<ValuePtr>& args, EvalEnv& env)
 }
 ValuePtr ifForm(const std::vector<ValuePtr>& args, EvalEnv& env) {
   auto ans=env.eval(args[0]);
-  if(ans->toString()=="#f") return env.eval(args[2]);
-  return env.eval(args[1]);
+  if(ans->toString()=="#f") return std::move(env.eval(args[2]));
+  return std::move(env.eval(args[1]));
 }
 ValuePtr andForm(const std::vector<ValuePtr>& args, EvalEnv& env)
 {   
@@ -46,14 +46,14 @@ ValuePtr andForm(const std::vector<ValuePtr>& args, EvalEnv& env)
         auto ans=env.eval(args[i]);
         if(ans->toString()=="#f")
         return std::make_shared<BooleanValue>(false);
-        if(i==args.size()-1) return ans;
-    }return args[args.size()-1];
+        if(i==args.size()-1) return std::move(ans);
+    }return std::move(args[args.size()-1]);
 }
 ValuePtr orForm(const std::vector<ValuePtr>& args, EvalEnv& env){
     for(int i{0};i!=args.size();i++)
     {
         auto ans=env.eval(args[i]);
-        if(ans->toString()!="#f")return ans;
+        if(ans->toString()!="#f")return std::move(ans);
     }
      return std::make_shared<BooleanValue>(false);
 }
@@ -74,9 +74,9 @@ ValuePtr condForm(const std::vector<ValuePtr>& args, EvalEnv& env) {
                 for (int j{1};j!=son.size();j++)
                 {
                     auto tmp=env.eval(son[j]);
-                    if(j==son.size()-1) return tmp;
+                    if(j==son.size()-1) return std::move(tmp);
                 }
-                 if(son.size()==1) return son[0];
+                 if(son.size()==1) return std::move(son[0]);
         }
         auto result=env.eval(son[0]);
             if(result->toString()=="#f") continue;
@@ -84,9 +84,9 @@ ValuePtr condForm(const std::vector<ValuePtr>& args, EvalEnv& env) {
                 for (int j{1};j!=son.size();j++)
                 {
                     auto tmp=env.eval(son[j]);
-                    if(j==son.size()-1) return tmp;
+                    if(j==son.size()-1) return std::move(tmp);
                 }
-                if(son.size()==1) return result;
+                if(son.size()==1) return std::move(result);
             }
         }
     
@@ -98,8 +98,9 @@ ValuePtr beginForm(const std::vector<ValuePtr>& args, EvalEnv& env)
     for(int i{0};i!=args.size();i++)
   {
     auto result=env.eval(args[i]);
-    if(i==args.size()-1)return result;
+    if(i==args.size()-1)return std::move(result);
   }
+  return std::make_shared<NilValue>();
 }
 
 ValuePtr letForm(const std::vector<ValuePtr>& args, EvalEnv& env) 
@@ -112,13 +113,13 @@ ValuePtr letForm(const std::vector<ValuePtr>& args, EvalEnv& env)
         auto tmp=a->toVector();
         if(tmp.size()!=2) throw LispError("The number of parameters provided does not meet the requirements.");
         newArgs.push_back(tmp[0]->toString());
-        value.push_back(env.eval(tmp[1]));
+        value.push_back(std::move(env.eval(tmp[1])));
     }
     if(args.size()<2) throw LispError("The number of parameters provided does not meet the requirements.");
     for(int i{1};i!=args.size();i++)
-      process.push_back(args[i]);
+      process.push_back(std::move(args[i]));
     auto Lambda=std::make_shared<LambdaValue>(newArgs,process,env.shared_from_this());
-    return Lambda->apply(value);
+    return std::move(Lambda->apply(value));
 }
 ValuePtr unForm(const std::vector<ValuePtr>& args, EvalEnv& env)
 {
@@ -135,11 +136,11 @@ ValuePtr quasiForm(const std::vector<ValuePtr>& args, EvalEnv& env)
            if(tmp[0]->asSymbol()=="quasiquote") throw LispError("illegal!");
            if(tmp[0]->asSymbol()=="unquote"){
               // std::cout<<tmp[1]->toString();
-               result.push_back(env.eval(tmp[1]));
+               result.push_back(std::move(env.eval(tmp[1])));
                continue;
            }
         }
         result.push_back(a);
     }
-    return list(result);
+    return std::move(list(result));
 }

@@ -20,8 +20,7 @@ public:
     ValuePtr eval(ValuePtr expr);
     void Push_Back(std::string str,ValuePtr valueptr );
     ValuePtr lookupBinding(std::string str);
-    ValuePtr defineBinding(); 
+protected:
     std::shared_ptr<EvalEnv> parent{nullptr};
-    
 };
 #endif
