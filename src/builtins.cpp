@@ -383,4 +383,3 @@ ValuePtr ifZero(const std::vector<ValuePtr>& params)
     return std::make_shared<BooleanValue>(true);}
   else throw LispError("TypeError, should be a numeric value.");
 }
-
