@@ -18,7 +18,8 @@ ValuePtr ifAtom(const std::vector<ValuePtr>& params);//
 ValuePtr ifBoolean(const std::vector<ValuePtr>& params);//
 ValuePtr ifInteger(const std::vector<ValuePtr>& params);//
 ValuePtr ifList(const std::vector<ValuePtr>& params);
-ValuePtr ifNumber(const std::vector<ValuePtr>& params);//
+ValuePtr ifNumber(const std::vector<ValuePtr>& params);
+ValuePtr ifNumbers(const std::vector<ValuePtr>& params);//
 ValuePtr ifNull(const std::vector<ValuePtr>& params);//
 ValuePtr ifPair(const std::vector<ValuePtr>& params);//
 ValuePtr ifProcedure(const std::vector<ValuePtr>& params);//
@@ -27,6 +28,7 @@ ValuePtr ifSymbol(const std::vector<ValuePtr>& params);//
 ValuePtr ifEven(const std::vector<ValuePtr>& params);
 ValuePtr ifOdd(const std::vector<ValuePtr>& params);
 ValuePtr ifZero(const std::vector<ValuePtr>& params);
+ValuePtr ifInt(const std::vector<ValuePtr>& params);
 ValuePtr append(const std::vector<ValuePtr>& params);//list
 ValuePtr Rcar(const std::vector<ValuePtr>& params);
 ValuePtr Rcdr(const std::vector<ValuePtr>& params);

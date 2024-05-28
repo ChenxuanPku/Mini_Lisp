@@ -116,6 +116,8 @@ EvalEnv::EvalEnv(){
   SymbolMap["even?"]=std::make_shared<BuiltinProcValue>(&ifEven);
   SymbolMap["odd?"]=std::make_shared<BuiltinProcValue>(&ifOdd);
   SymbolMap["zero?"]=std::make_shared<BuiltinProcValue>(&ifZero);
+  SymbolMap["num?"]=std::make_shared<BuiltinProcValue>(&ifNumbers);
+  SymbolMap["int?"]=std::make_shared<BuiltinProcValue>(&ifInt);
 }
 
 void EvalEnv::Push_Back(std::string str,ValuePtr valueptr){
