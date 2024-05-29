@@ -34,7 +34,7 @@ void  REPL()
 {
     std::shared_ptr<EvalEnv> env = EvalEnv::createGlobal();
     
-    while (true) {
+    while (true) try{
        
             std::cout << ">>> " ;
             std::string line;
@@ -56,7 +56,8 @@ void  REPL()
               break;
             }else std::cout<<"```";
             }
-    }
+    }catch (std::runtime_error& e) {
+            std::cerr << "Error: " << e.what() << std::endl;}
         
    
 }
@@ -92,7 +93,7 @@ void FileMode(const char* filename)
 }
 int main(int argc, char** argv) {
       
-   RJSJ_TEST(TestCtx, Lv2, Lv3, Lv4, Lv5, Lv5Extra, Lv6, Lv7, Lv7Lib, Sicp);
+   //RJSJ_TEST(TestCtx, Lv2, Lv3, Lv4, Lv5, Lv5Extra, Lv6, Lv7, Lv7Lib, Sicp);
    try { if (argc==2)
     {
        if (strcmp(argv[1],"-r")==0) REPL();
