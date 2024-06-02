@@ -107,7 +107,6 @@ int main(int argc, char** argv) {
     else throw SyntaxError("wrong mode");
     }catch (std::runtime_error& e) {
             std::cerr << "Error: " << e.what() << std::endl;}
-   
     return 0;
 }
 
