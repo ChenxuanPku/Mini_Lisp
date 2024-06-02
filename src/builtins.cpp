@@ -47,7 +47,7 @@ ValuePtr divide(const std::vector<ValuePtr>& params)
   throw LispError("The number of parameters provided does not meet the requirements.");
 }
 ValuePtr print(const std::vector<ValuePtr>& params)
-{
+{ if(params.size()!=1) throw LispError("The number of parameters provided does not meet the requirements.");
   for (const auto& i:params){
     std::cout<<i->toString()<<" ";
   }
