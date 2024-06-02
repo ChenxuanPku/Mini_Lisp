@@ -10,10 +10,7 @@
 EvalEnv::EvalEnv(){
  
   std::function<BuiltinFuncType> Apply=[this](const std::vector<ValuePtr>& params){
-      //std::cout<<"Apply"<<std::endl;
       if (params.size()!=2) throw LispError("The number of parameters provided does not meet the requirements.");
-     // ValuePtr  proc=params[0];
-     // std::vector<ValuePtr> args(params[1]->toVector());
       return this->apply(params[0],params[1]->toVector());
   } ;
  
