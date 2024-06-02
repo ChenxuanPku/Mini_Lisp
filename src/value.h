@@ -23,7 +23,7 @@ public:
   virtual double asNumber();
   virtual std::shared_ptr<Value> toHead();
   virtual std::shared_ptr<Value> toBack();
-  virtual std::string asString();
+  virtual std::string asString(){return "";};
 };
 using ValuePtr = std::shared_ptr<Value>; 
 class BooleanValue:public Value{
