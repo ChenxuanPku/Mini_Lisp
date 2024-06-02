@@ -77,8 +77,9 @@ ValuePtr display(const std::vector<ValuePtr>& params){
   if (params.size()!=1) throw LispError("The number of parameters provided does not meet the requirements.");
   for (auto i:params)
   {
-    
+      if(!i->isString())
       std::cout<<i->toString();
+      else  std::cout<<i->asString();
   }
   return std::make_shared<NilValue>();
 }
@@ -87,7 +88,9 @@ ValuePtr displayln(const std::vector<ValuePtr>& params){
   if (params.size()!=1) throw LispError("The number of parameters provided does not meet the requirements.");
   for (auto i:params)
   {
+      if(!i->isString())
       std::cout<<i->toString()<<std::endl;
+      else  std::cout<<i->asString()<<std::endl;
   }
   return std::make_shared<NilValue>();
 }

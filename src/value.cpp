@@ -142,3 +142,8 @@ ValuePtr LambdaValue::apply(const std::vector<ValuePtr>& args){
     if(i==body.size()-1)return result;
   }
 }
+
+std::string StringValue::asString()
+{
+  return stringValue;
+}

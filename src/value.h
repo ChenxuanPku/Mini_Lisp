@@ -23,7 +23,7 @@ public:
   virtual double asNumber();
   virtual std::shared_ptr<Value> toHead();
   virtual std::shared_ptr<Value> toBack();
-  
+  virtual std::string asString();
 };
 using ValuePtr = std::shared_ptr<Value>; 
 class BooleanValue:public Value{
@@ -48,6 +48,7 @@ public:
   StringValue()=default;
   StringValue(std::string str);
   std::string toString();
+  std::string asString();
 };
 class NilValue:public Value{
 public:
