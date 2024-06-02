@@ -219,8 +219,10 @@ ValuePtr append(const std::vector<ValuePtr>& params)
   std::vector<ValuePtr> vec{};
   for( auto v:params)
   {
+    if (v->isList())
     for(auto a:v->toVector())
     vec.push_back(a);
+    else throw TypeError("It should be a list");
   }
   
   int length=vec.size();
@@ -233,7 +235,9 @@ ValuePtr append(const std::vector<ValuePtr>& params)
 
 ValuePtr length(const std::vector<ValuePtr>& params)
 { testSize(params,1);
+  if (params[0]->isList())
   return std::make_shared<NumericValue>((params[0]->toVector()).size());
+  else throw TypeError("It should be a list");
 }
 
 ValuePtr list(const std::vector<ValuePtr>& params)

@@ -3,7 +3,7 @@
 
 #include <stdexcept>
 #include <vector>
-#include "./value.h"
+
 class SyntaxError : public std::runtime_error {
 public:
     using runtime_error::runtime_error;
@@ -27,9 +27,5 @@ void testSize(const std::vector<T>& params, int setNum)
     if(tmpSize!=setNum)
       throw SizeError("The number of parameters provided does not meet the requirements.");
 }
-void testList(ValuePtr expr)
-{
-    if(!expr->isList())
-    throw TypeError("It should be a list.");
-}
+
 #endif

@@ -103,7 +103,7 @@ std::string BuiltinProcValue::toString()
 }
 double Value::asNumber()
 {
-  throw LispError("Type error!");
+  throw LispError("It should be a numerical value.");
 }
 double NumericValue::asNumber()
 {
@@ -125,10 +125,10 @@ std::function<BuiltinFuncType> BuiltinProcValue::asfunc()
   return func;
 }
 ValuePtr Value::toBack(){
-  throw LispError("Type error!");
+  throw LispError("It should be a pair value.");
 }
 ValuePtr Value::toHead(){
- throw LispError("Type error!");
+ throw LispError("It should be a pair value.");
 }
 ValuePtr PairValue::toHead(){
   return car;
@@ -154,7 +154,7 @@ ValuePtr LambdaValue::apply(const std::vector<ValuePtr>& args){
 
 std::string Value::asString()
 {
-  throw TypeError("It should be a string value");
+  throw TypeError("It should be a string value.");
 }
 std::string StringValue::asString()
 {

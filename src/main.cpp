@@ -20,13 +20,15 @@ struct TestCtx {
     }
 };
 bool CheckParen(const std::string& line) {
+    bool doubleQuote=true;
     int count = 0;
     for (char c : line) {
-        if (c == '(') {
+        if(c=='"') doubleQuote=!doubleQuote;
+        if(doubleQuote){ if(c == '(') {
             count++;
         } else if (c == ')') {
             count--;
-        }
+        }}
     }
     return count == 0;
 }

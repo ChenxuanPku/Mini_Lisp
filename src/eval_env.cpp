@@ -11,8 +11,9 @@ EvalEnv::EvalEnv(){
  
   std::function<BuiltinFuncType> Apply=[this](const std::vector<ValuePtr>& params){
       if (params.size()!=2) throw LispError("The number of parameters provided does not meet the requirements.");
-      testList(params[1]);
+      if(params[1]->isList())
       return this->apply(params[0],params[1]->toVector());
+      else throw TypeError("It should be a list.");
   } ;
  
   std::function<BuiltinFuncType> Eval=[this](const std::vector<ValuePtr>& params){
@@ -22,19 +23,20 @@ EvalEnv::EvalEnv(){
   std::function<BuiltinFuncType> Map=[this](const std::vector<ValuePtr>& params){
     if (params.size()!=2) throw LispError("The number of parameters provided does not meet the requirements.");
     std::vector<ValuePtr> result;
-    testList(params[1]);{
+    if(params[1]->isList()){
     for(auto a:params[1]->toVector())
     {
        std::vector<ValuePtr> tmp{a};
        result.push_back(this->apply(params[0],tmp));
     }
-    return list(result);}}
+    return list(result);}else throw TypeError("It should be a list.");
+    }
     
   ; 
   std::function<BuiltinFuncType> Filter=[this](const std::vector<ValuePtr>& params){
    if (params.size()!=2) throw LispError("The number of parameters provided does not meet the requirements.");
    std::vector<ValuePtr> result{};
-    for(auto a:params[1]->toVector())
+    if(params[1]->isList()){ for(auto a:params[1]->toVector())
     {  
        std::vector<ValuePtr> tmp{a};
        auto ans=this->apply(params[0],tmp);
@@ -45,7 +47,8 @@ EvalEnv::EvalEnv(){
         result.push_back(a);}
        
     }
-    return list(result);
+    return list(result);}
+    else throw TypeError("It should be a list.");
   };
    std::function<BuiltinFuncType> Reduce=[this](const std::vector<ValuePtr>& params){
     if (params.size()!=2) throw LispError("The number of parameters provided does not meet the requirements.");
