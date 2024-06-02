@@ -17,13 +17,15 @@ public:
   bool isSymbol();
   bool isPair();
   bool isBuiltin();
+  bool isList();
   virtual std::string toString(){return "";}
   virtual std::vector<std::shared_ptr<Value>> toVector();
   virtual std::optional<std::string> asSymbol();
   virtual double asNumber();
+  virtual bool asBool();
   virtual std::shared_ptr<Value> toHead();
   virtual std::shared_ptr<Value> toBack();
-  virtual std::string asString(){return "";};
+  virtual std::string asString();
 };
 using ValuePtr = std::shared_ptr<Value>; 
 class BooleanValue:public Value{
@@ -32,6 +34,7 @@ public:
   BooleanValue()=default;
   BooleanValue(bool boolvalue);
   std::string toString();
+  bool asBool();
 };
 
 class NumericValue:public Value{

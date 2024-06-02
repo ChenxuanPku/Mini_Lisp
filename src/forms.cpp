@@ -10,6 +10,7 @@ const std::unordered_map<std::string, SpecialFormType*> SPECIAL_FORMS{
 
 ValuePtr defineForm(const std::vector<ValuePtr>& args, EvalEnv& env) 
 {
+    if (args.size()<2) throw LispError("Error");
     if (auto name = args[0]->asSymbol()) {
         env.Push_Back(*name, std::move(env.eval(args[1])));
     } else {
@@ -44,7 +45,8 @@ ValuePtr andForm(const std::vector<ValuePtr>& args, EvalEnv& env)
     for(int i{0};i!=args.size();i++)
     {
         auto ans=env.eval(args[i]);
-        if(ans->toString()=="#f")
+        if(ans->isBoolean())
+        if(!ans->asBool())
         return std::make_shared<BooleanValue>(false);
         if(i==args.size()-1) return std::move(ans);
     }return std::move(args[args.size()-1]);

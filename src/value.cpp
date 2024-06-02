@@ -42,16 +42,17 @@ PairValue::PairValue(ValuePtr car,ValuePtr cdr):car(car),cdr(cdr){}
 std::string PairValue::toString()
 {
   std::ostringstream os;
-  os<<"("<<car->toString()<<" ";
+  os<<"("<<car->toString();
   ValuePtr pnow=cdr;
   while(typeid(*pnow)==typeid(PairValue))
   {
+   
    auto& pair = static_cast<const PairValue&>(*pnow);
-   os<<(pair.car->toString())<<" ";
+   os<<" "<<(pair.car->toString());
    pnow=pair.cdr;
   }
   if(typeid(*pnow)!=typeid(NilValue))
-  os<<". "<<pnow->toString();
+  os<<" . "<<pnow->toString();
   os<<")";
   return os.str();
 }    
@@ -102,13 +103,21 @@ std::string BuiltinProcValue::toString()
 }
 double Value::asNumber()
 {
-  return 0;
+  throw LispError("Type error!");
 }
 double NumericValue::asNumber()
 {
   return numericValue;
 }
 
+bool Value::asBool()
+{
+  throw TypeError("It should be a booleanvalue.");
+}
+bool BooleanValue::asBool()
+{
+  return booleanValue;
+}
 std::function<BuiltinFuncType> BuiltinProcValue::asfunc()
 {
   if (func==nullptr)throw LispError("emptyPtr");
@@ -116,10 +125,10 @@ std::function<BuiltinFuncType> BuiltinProcValue::asfunc()
   return func;
 }
 ValuePtr Value::toBack(){
-  return std::make_shared<NilValue>();
+  throw LispError("Type error!");
 }
 ValuePtr Value::toHead(){
-  return std::make_shared<NilValue>();
+ throw LispError("Type error!");
 }
 ValuePtr PairValue::toHead(){
   return car;
@@ -143,7 +152,26 @@ ValuePtr LambdaValue::apply(const std::vector<ValuePtr>& args){
   }
 }
 
+std::string Value::asString()
+{
+  throw TypeError("It should be a string value");
+}
 std::string StringValue::asString()
 {
   return stringValue;
+}
+
+bool Value::isList()
+{
+  if(isNil())return true;
+  if(isPair())
+  { ValuePtr now{toBack()};
+    while(now->isPair())
+    {
+      now=now->toBack();
+      if(now->isNil())return true;
+    }
+    if(now->isNil())return true;
+    return false;}
+  else return true;
 }

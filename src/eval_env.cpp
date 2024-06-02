@@ -21,13 +21,15 @@ EvalEnv::EvalEnv(){
   std::function<BuiltinFuncType> Map=[this](const std::vector<ValuePtr>& params){
     if (params.size()!=2) throw LispError("The number of parameters provided does not meet the requirements.");
     std::vector<ValuePtr> result;
+    if (params[1]->isList()){
     for(auto a:params[1]->toVector())
     {
        std::vector<ValuePtr> tmp{a};
        result.push_back(this->apply(params[0],tmp));
     }
-    return list(result);
-  }; 
+    return list(result);}
+    throw TypeError("It should be a list");}
+  ; 
   std::function<BuiltinFuncType> Filter=[this](const std::vector<ValuePtr>& params){
    if (params.size()!=2) throw LispError("The number of parameters provided does not meet the requirements.");
    std::vector<ValuePtr> result{};
@@ -48,6 +50,7 @@ EvalEnv::EvalEnv(){
     if (params.size()!=2) throw LispError("The number of parameters provided does not meet the requirements.");
     if (typeid(*params[1])==typeid(NilValue)) throw LispError("Empty!");
     std::vector<ValuePtr> vec=params[1]->toVector();
+    
    // if(vec.size()==1)return vec[0];else 
     for(int i{vec.size()-2};i!=-1;i--)
     {
@@ -142,10 +145,12 @@ ValuePtr EvalEnv::eval(ValuePtr expr){
         { auto it=SPECIAL_FORMS.find(*name);
           
            if(it!=SPECIAL_FORMS.end())
-           { 
+           { if((expr->toBack()->isList()))
              return (it->second)(expr->toBack()->toVector(), *this);
+             else throw TypeError("It should be a list.");
            }}
         ValuePtr proc=lookupBinding(*name);
+        if(!expr->toBack()->isList())throw TypeError("It should be a list.");
         std::vector<ValuePtr> args=evalList(expr->toBack());
        
         {
@@ -155,6 +160,7 @@ ValuePtr EvalEnv::eval(ValuePtr expr){
    else{
      ValuePtr proc=this->eval(expr->toHead());
      if(typeid(*proc)!=typeid(LambdaValue)&&typeid(*proc)!=typeid(BuiltinProcValue))return expr;
+     if(!expr->toBack()->isList())throw TypeError("It should be a list.");
      std::vector<ValuePtr> args=evalList(expr->toBack());
      return this->apply(proc, args);
   } 

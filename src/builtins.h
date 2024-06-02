@@ -37,7 +37,7 @@ ValuePtr length(const std::vector<ValuePtr>& params);
 ValuePtr list(const std::vector<ValuePtr>& params);
 //ValuePtr map(const std::vector<ValuePtr>& params);
 //ValuePtr filter(const std::vector<ValuePtr>& params);
-ValuePtr reduce(const std::vector<ValuePtr>& params);
+//ValuePtr reduce(const std::vector<ValuePtr>& params);
 ValuePtr divide(const std::vector<ValuePtr>& params);
 ValuePtr Abs(const std::vector<ValuePtr>& params);
 ValuePtr expt(const std::vector<ValuePtr>& params);
