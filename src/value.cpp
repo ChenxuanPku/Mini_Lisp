@@ -68,7 +68,7 @@ bool Value::isBuiltin(){return (typeid(*this)==typeid(BuiltinProcValue));}
 std::vector<ValuePtr> Value::toVector(){
   std::vector<ValuePtr> Vec{};
   if(typeid(*this)==typeid(NilValue))return Vec;
-  else throw LispError(this->toString()+" notList");
+  else throw LispError(this->toString()+" should be a list.");
 }
 std::vector<ValuePtr> PairValue::toVector(){
   

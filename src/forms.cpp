@@ -10,7 +10,7 @@ const std::unordered_map<std::string, SpecialFormType*> SPECIAL_FORMS{
 
 ValuePtr defineForm(const std::vector<ValuePtr>& args, EvalEnv& env) 
 {
-    if (args.size()<2) throw LispError("Error");
+    if (args.size()<2) throw LispError("The number of parameters provided does not meet the requirements.");
     if (auto name = args[0]->asSymbol()) {
         env.Push_Back(*name, std::move(env.eval(args[1])));
     } else {
@@ -36,7 +36,7 @@ ValuePtr quoteForm(const std::vector<ValuePtr>& args, EvalEnv& env)
 }
 ValuePtr ifForm(const std::vector<ValuePtr>& args, EvalEnv& env) {
   auto ans=env.eval(args[0]);
-  if(ans->toString()=="#f") return std::move(env.eval(args[2]));
+  if(ans->isBoolean())if(!ans->asBool()) return std::move(env.eval(args[2]));
   return std::move(env.eval(args[1]));
 }
 ValuePtr andForm(const std::vector<ValuePtr>& args, EvalEnv& env)
@@ -55,7 +55,9 @@ ValuePtr orForm(const std::vector<ValuePtr>& args, EvalEnv& env){
     for(int i{0};i!=args.size();i++)
     {
         auto ans=env.eval(args[i]);
-        if(ans->toString()!="#f")return std::move(ans);
+        if(ans->isBoolean())
+          if(!ans->asBool()) continue;
+        return std::move(ans);
     }
      return std::make_shared<BooleanValue>(false);
 }
@@ -72,7 +74,7 @@ ValuePtr condForm(const std::vector<ValuePtr>& args, EvalEnv& env) {
         auto son=args[i]->toVector();
         if(son.size()==0) throw LispError ("The number of parameters provided does not meet the requirements.");
         if(son[0]->toString()=="else"){
-            if(i!=args.size()-1)throw LispError ("unDefined");
+            if(i!=args.size()-1)throw LispError ("Else should be the last one.");
                 for (int j{1};j!=son.size();j++)
                 {
                     auto tmp=env.eval(son[j]);
@@ -81,8 +83,8 @@ ValuePtr condForm(const std::vector<ValuePtr>& args, EvalEnv& env) {
                  if(son.size()==1) return std::move(son[0]);
         }
         auto result=env.eval(son[0]);
-            if(result->toString()=="#f") continue;
-            else {
+             if(result->isBoolean()) if(!result->asBool()) continue;
+            {
                 for (int j{1};j!=son.size();j++)
                 {
                     auto tmp=env.eval(son[j]);
@@ -125,7 +127,7 @@ ValuePtr letForm(const std::vector<ValuePtr>& args, EvalEnv& env)
 }
 ValuePtr unForm(const std::vector<ValuePtr>& args, EvalEnv& env)
 {
-    throw LispError("Error!");
+    throw LispError("There should be quasiquote ahead.");
 }
 ValuePtr quasiForm(const std::vector<ValuePtr>& args, EvalEnv& env) 
 {
@@ -135,7 +137,7 @@ ValuePtr quasiForm(const std::vector<ValuePtr>& args, EvalEnv& env)
     {
         if(a->isPair())
         {  auto tmp=a->toVector();
-           if(tmp[0]->asSymbol()=="quasiquote") throw LispError("illegal!");
+           if(tmp[0]->asSymbol()=="quasiquote") throw LispError("There should the only one quasiquote.");
            if(tmp[0]->asSymbol()=="unquote"){
               // std::cout<<tmp[1]->toString();
                result.push_back(std::move(env.eval(tmp[1])));

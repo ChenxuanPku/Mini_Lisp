@@ -182,13 +182,13 @@ ValuePtr ifSymbol(const std::vector<ValuePtr>& params)
 ValuePtr Rcar(const std::vector<ValuePtr>& params)
 {
   testSize(params,1);
-  if(!params[0]->isPair()) throw LispError("error");
+  if(!params[0]->isPair()) throw LispError("It should be a list.");
   return params[0]->toHead();
 }
 ValuePtr Rcdr(const std::vector<ValuePtr>& params)
 {
   testSize(params,1);
-  if(!params[0]->isPair()) throw LispError("error");
+  if(!params[0]->isPair()) throw LispError("It should be a list.");
   return params[0]->toBack();
 }
 

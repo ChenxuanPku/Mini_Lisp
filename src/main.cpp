@@ -96,12 +96,12 @@ void FileMode(const char* filename)
 }
 int main(int argc, char** argv) {
       
-    RJSJ_TEST(TestCtx, Lv2, Lv3, Lv4, Lv5, Lv5Extra, Lv6, Lv7, Lv7Lib, Sicp);
+   //RJSJ_TEST(TestCtx, Lv2, Lv3, Lv4, Lv5, Lv5Extra, Lv6, Lv7, Lv7Lib, Sicp);
    try { if (argc==2)
     {
        if (strcmp(argv[1],"-r")==0) REPL();
        else throw SyntaxError("wrong mode");
-    }
+    }  
     else if(argc==3)
     {
       if (strcmp(argv[1],"-f")==0) FileMode(argv[2]);

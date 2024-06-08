@@ -156,9 +156,7 @@ ValuePtr EvalEnv::eval(ValuePtr expr){
         ValuePtr proc=lookupBinding(*name);
         if(!expr->toBack()->isList())throw TypeError("It should be a list.");
         std::vector<ValuePtr> args=evalList(expr->toBack());
-       
         {
-          
         return this->apply(proc, args);}
       }}
    else{
