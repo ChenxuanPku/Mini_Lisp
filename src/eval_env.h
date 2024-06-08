@@ -1,25 +1,27 @@
 #ifndef EVALENV_H
 #define EVALENV_H
 
-#include<unordered_map>
-//#include "./value.h"
+#include <unordered_map>
+// #include "./value.h"
 #include "./builtins.h"
 class Value;
-using ValuePtr = std::shared_ptr<Value>; 
-class EvalEnv : public std::enable_shared_from_this<EvalEnv>  {
+using ValuePtr = std::shared_ptr<Value>;
+class EvalEnv : public std::enable_shared_from_this<EvalEnv> {
 private:
     std::vector<ValuePtr> evalList(ValuePtr expr);
     ValuePtr apply(ValuePtr proc, std::vector<ValuePtr> args);
-    std::unordered_map<std::string,ValuePtr> SymbolMap;
+    std::unordered_map<std::string, ValuePtr> SymbolMap;
     EvalEnv();
     ValuePtr Apply(const std::vector<ValuePtr>& params, EvalEnv* env);
-    
+
 public:
     static std::shared_ptr<EvalEnv> createGlobal();
-    std::shared_ptr<EvalEnv> createChild(const std::vector<std::string>& params, const std::vector<ValuePtr>& args);
+    std::shared_ptr<EvalEnv> createChild(const std::vector<std::string>& params,
+                                         const std::vector<ValuePtr>& args);
     ValuePtr eval(ValuePtr expr);
-    void Push_Back(std::string str,ValuePtr valueptr );
+    void Push_Back(std::string str, ValuePtr valueptr);
     ValuePtr lookupBinding(std::string str);
+
 protected:
     std::shared_ptr<EvalEnv> parent{nullptr};
 };
