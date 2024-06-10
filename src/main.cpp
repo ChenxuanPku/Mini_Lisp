@@ -24,11 +24,12 @@ bool CheckParen(const std::string& line) {
     bool doubleQuote = true;
     int count = 0;
     bool ttt = false;
-    for(int i{0};i!=line.size();i++)
-    {
-        if (line[i] == '"') 
-        {if(i==0)doubleQuote = !doubleQuote;
-        else if(line[i-1]!='\\')doubleQuote = !doubleQuote;
+    for (int i{0}; i != line.size(); i++) {
+        if (line[i] == '"') {
+            if (i == 0)
+                doubleQuote = !doubleQuote;
+            else if (line[i - 1] != '\\')
+                doubleQuote = !doubleQuote;
         }
         if (doubleQuote) {
             if (line[i] == '(') {
@@ -57,8 +58,7 @@ void REPL() {
                 if (CheckParen(str)) {
                     if (!str.empty()) {
                         auto tokens = Tokenizer::tokenize(str);
-                        Parser parser(
-                            std::move(tokens));  // TokenPtr 不支持复制
+                        Parser parser(std::move(tokens));
                         auto value = parser.parse();
                         auto result = env->eval(std::move(value));
                         std::cout << result->toString() << std::endl;
@@ -84,7 +84,6 @@ void FileMode(const char* filename) {
         result += line;
         if (CheckParen(result)) {
             if (!result.empty()) {
-                // std::cout<<result<<std::endl;
                 auto tokens = Tokenizer::tokenize(result);
                 Parser parser(std::move(tokens));
                 auto value = parser.parse();
@@ -95,7 +94,7 @@ void FileMode(const char* filename) {
     }
 }
 int main(int argc, char** argv) {
-     RJSJ_TEST(TestCtx, Lv2, Lv3, Lv4, Lv5, Lv5Extra, Lv6, Lv7, Lv7Lib, Sicp);
+    RJSJ_TEST(TestCtx, Lv2, Lv3, Lv4, Lv5, Lv5Extra, Lv6, Lv7, Lv7Lib, Sicp);
     try {
         if (argc == 2) {
             if (strcmp(argv[1], "-r") == 0)

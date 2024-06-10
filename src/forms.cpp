@@ -94,8 +94,9 @@ ValuePtr condForm(const std::vector<ValuePtr>& args, EvalEnv& env) {
             if (son.size() == 1) return std::move(result);
         }
     }
-
-    throw LispError("unDefined");
+    throw LispError(
+        "The number of parameters provided does not meet the "
+        "requirements.");
 }
 
 ValuePtr beginForm(const std::vector<ValuePtr>& args, EvalEnv& env) {
@@ -143,7 +144,6 @@ ValuePtr quasiForm(const std::vector<ValuePtr>& args, EvalEnv& env) {
             if (tmp[0]->asSymbol() == "quasiquote")
                 throw LispError("There should the only one quasiquote.");
             if (tmp[0]->asSymbol() == "unquote") {
-                // std::cout<<tmp[1]->toString();
                 result.push_back(std::move(env.eval(tmp[1])));
                 continue;
             }

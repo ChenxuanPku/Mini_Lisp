@@ -125,7 +125,6 @@ bool BooleanValue::asBool() {
 }
 std::function<BuiltinFuncType> BuiltinProcValue::asfunc() {
     if (func == nullptr) throw LispError("emptyPtr");
-    // std::cout<<"func"<<std::endl;
     return func;
 }
 ValuePtr Value::toBack() {

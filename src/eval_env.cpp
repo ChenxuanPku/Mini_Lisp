@@ -70,10 +70,8 @@ EvalEnv::EvalEnv() {
                 throw LispError(
                     "The number of parameters provided does not meet the "
                     "requirements.");
-            if (params[1]->isNil()) throw LispError("Empty!");
+            if (params[1]->isNil()) throw LispError("Cannot act on a empty value.");
             std::vector<ValuePtr> vec = params[1]->toVector();
-
-            // if(vec.size()==1)return vec[0];else
             for (auto i{vec.size() - 2}; i != -1; i--) {
                 std::vector<ValuePtr> tmp{vec[i], vec[i + 1]};
                 vec[i] = this->apply(params[0], tmp);
@@ -179,7 +177,7 @@ ValuePtr EvalEnv::eval(ValuePtr expr) {
             }
         } else {
             ValuePtr proc = this->eval(expr->toHead());
-            if (!proc->isLambda() && !proc->isBuiltin()) throw LispError(proc->toString()+" Not a procedure.");
+            if (!proc->isLambda() && !proc->isBuiltin()) throw LispError(proc->toString()+" not a procedure.");
             if (!expr->toBack()->isList())
                 throw TypeError("It should be a list.");
             std::vector<ValuePtr> args = evalList(expr->toBack());
@@ -211,7 +209,7 @@ ValuePtr EvalEnv::apply(ValuePtr proc, std::vector<ValuePtr> args) {
         if (proc->isLambda()) {
             return (dynamic_cast<LambdaValue*>(proc.get()))->apply(args);
         }
-        throw LispError("ApplyUnimplemented" + proc->toString());
+        throw LispError("Apply Unimplemented " + proc->toString());
     }
 }
 ValuePtr EvalEnv::lookupBinding(std::string str) {

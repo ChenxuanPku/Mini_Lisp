@@ -4,8 +4,8 @@
 
 #include "./error.h"
 ValuePtr Parser::parse() {
-    if (tokens.empty()) throw SyntaxError("Empty");
-    auto token = std::move(tokens.front());  // 智能指针不能复制
+    if (tokens.empty()) throw SyntaxError("The token is imcomplement.");
+    auto token = std::move(tokens.front());
     if (token->getType() == TokenType::IDENTIFIER) {
         auto value = static_cast<IdentifierToken&>(*token).getName();
         tokens.pop_front();
@@ -48,22 +48,22 @@ ValuePtr Parser::parse() {
             std::make_shared<PairValue>(this->parse(),
                                         std::make_shared<NilValue>()));
     } else {
-        throw SyntaxError("UnDefined");
+        throw SyntaxError("UnDefined token");
     }
 }
 
 ValuePtr Parser::parseTails() {
-    if (tokens.empty()) throw SyntaxError("Empty");
+    if (tokens.empty()) throw SyntaxError("The token is imcomplement.");
     if (tokens.front()->toString() == "(RIGHT_PAREN)") {
         tokens.pop_front();
         return std::make_shared<NilValue>();
     }
     auto car = this->parse();
 
-    if (tokens.empty()) throw SyntaxError("Empty");
+    if (tokens.empty()) throw SyntaxError("The token is imcomplement.");
     if (tokens.front()->toString() == "(DOT)") {
         tokens.pop_front();
-        if (tokens.empty()) throw SyntaxError("Empty");
+        if (tokens.empty()) throw SyntaxError("The token is imcomplement.");
         auto cdr = this->parse();
         return std::make_shared<PairValue>(std::move(car), std::move(cdr));
     } else {
