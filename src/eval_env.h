@@ -13,7 +13,7 @@ private:
     std::unordered_map<std::string, ValuePtr> SymbolMap;
     EvalEnv();
     ValuePtr Apply(const std::vector<ValuePtr>& params, EvalEnv* env);
-
+    
 public:
     static std::shared_ptr<EvalEnv> createGlobal();
     std::shared_ptr<EvalEnv> createChild(const std::vector<std::string>& params,

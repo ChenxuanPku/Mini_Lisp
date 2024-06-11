@@ -70,7 +70,8 @@ EvalEnv::EvalEnv() {
                 throw LispError(
                     "The number of parameters provided does not meet the "
                     "requirements.");
-            if (params[1]->isNil()) throw LispError("Cannot act on a empty value.");
+            if (params[1]->isNil())
+                throw LispError("Cannot act on a empty value.");
             std::vector<ValuePtr> vec = params[1]->toVector();
             for (auto i{vec.size() - 2}; i != -1; i--) {
                 std::vector<ValuePtr> tmp{vec[i], vec[i + 1]};
@@ -177,7 +178,8 @@ ValuePtr EvalEnv::eval(ValuePtr expr) {
             }
         } else {
             ValuePtr proc = this->eval(expr->toHead());
-            if (!proc->isLambda() && !proc->isBuiltin()) throw LispError(proc->toString()+" not a procedure.");
+            if (!proc->isLambda() && !proc->isBuiltin())
+                throw LispError(proc->toString() + " not a procedure.");
             if (!expr->toBack()->isList())
                 throw TypeError("It should be a list.");
             std::vector<ValuePtr> args = evalList(expr->toBack());
@@ -187,7 +189,7 @@ ValuePtr EvalEnv::eval(ValuePtr expr) {
     if (expr->isBuiltin()) {
         return std::move(expr);
     }
-    throw LispError("Unimplemented");
+    throw LispError("Undefined type.");
 }
 
 std::vector<ValuePtr> EvalEnv::evalList(ValuePtr expr) {
