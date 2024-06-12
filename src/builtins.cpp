@@ -361,7 +361,7 @@ ValuePtr ifZero(const std::vector<ValuePtr>& params) {
 ValuePtr ifNumbers(const std::vector<ValuePtr>& params) {
     for (auto a : params) {
         if (!a->isNumeric())
-            if (!(params[0]->isNumeric()))
+           // if (!(params[0]->isNumeric()))
                 return std::make_shared<BooleanValue>(false);
     }
     return std::make_shared<BooleanValue>(true);
