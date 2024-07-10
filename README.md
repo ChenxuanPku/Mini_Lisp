@@ -1,5 +1,7 @@
 # `Mini-Lisp` 解释器
 
+这是北京大学“软件设计实践”课程（24春）的大作业项目`Mini-Lisp` 解释器
+
 -使用命令行进行控制
 -文本模式: `\.mini_lisp -f filename`
 -REPL模式: `\.mini_lisp -r`
