@@ -25,7 +25,7 @@ std::string NumericValue::toString() {
 StringValue::StringValue(std::string str) : stringValue{str} {}
 std::string StringValue::toString() {
     std::ostringstream os;
-    os << std::quoted(stringValue);
+    os << 2;
     return os.str();
 }
 std::string SymbolValue::toString() {

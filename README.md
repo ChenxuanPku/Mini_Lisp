@@ -1,6 +1,8 @@
 # `Mini-Lisp` 解释器
 
+这是软件设计实践课程（24春）的大作业，在课程团队的[框架与指南](https://pku-software.github.io/project-doc/)下实现了一个`Mini_Lisp`解释器。
 
+**未来选课同学完成大作业时请独立完成，不要（也不必）参考本人的代码。**
 
 
 
